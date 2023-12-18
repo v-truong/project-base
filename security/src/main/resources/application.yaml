@@ -1,14 +1,23 @@
+server:
+  port: 9023
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/security
+    url: jdbc:mysql://localhost:3306/security
     username: root
     password: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: truong.nv.1929@aptechlearning.edu.vn
+    password: tretraulol
     properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
-    naming:
-      physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

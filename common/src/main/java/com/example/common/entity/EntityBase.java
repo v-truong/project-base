@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.example.common.config.Constants;
+import com.example.common.util.DaoConst;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,10 +38,10 @@ public abstract class EntityBase {
   // @UuidGenerator(style="UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
+  // @Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date-time.Pattern.message}")
   @CreatedDate
   @Column(name = "created_date", updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
   private LocalDateTime createdDate;
-
   @LastModifiedDate
   @Column(name = "modified_date", columnDefinition = "TIMESTAMP")
   private LocalDateTime modifiedDate;

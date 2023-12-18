@@ -10,16 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,7 +22,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Account extends EntityBase{
 
-
   @Column(name = "name")
   private String name;
 
@@ -41,6 +31,14 @@ public class Account extends EntityBase{
   @Column(name = "password")
   private String password;
 
+   @Column(name = "email")
+  private String email;
+
   @Column(name = "roles")
   private String roles;
+
+  @Column(name = "isenabled")
+  private boolean isEnabled = false;
+  @Column(name = "token")
+  private String token;
 }

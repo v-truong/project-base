@@ -7,4 +7,7 @@ import com.example.security.entity.Account;
 
 public interface AccountRepo extends JpaRepository<Account,String> {
     Optional<Account> findByUsername(String username);
+    Optional<Account> findByEmail(String email);
+    Account findByToken(String token);
+
 }

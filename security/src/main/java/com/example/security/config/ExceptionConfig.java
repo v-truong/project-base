@@ -24,7 +24,7 @@ public class ExceptionConfig {
      @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
-  ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {
+  ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {///vi pham khóa contrain
     ValidationErrorResponse error = new ValidationErrorResponse();
     setErrorInfo(error, "API-001", e.getMessage());
     for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
@@ -36,7 +36,7 @@ public class ExceptionConfig {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
-  ValidationErrorResponse onMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+  ValidationErrorResponse onMethodArgumentNotValidException(MethodArgumentNotValidException e) {///đối tượng không hợp lệ được truyền vào một phương thức API
     ValidationErrorResponse error = new ValidationErrorResponse();
     setErrorInfo(error, "API-002", e.getMessage());
     for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
