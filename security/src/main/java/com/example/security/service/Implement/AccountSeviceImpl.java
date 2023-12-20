@@ -58,5 +58,15 @@ public class AccountSeviceImpl implements AccountSevice {
         accountRepo.save(account);
         return"goot";
     }
+    @Override
+    public String Postavatar(String id,String avartar) throws NotFoundException {
+         Account account =accountRepo.findById(id).get();
+         if (account==null) {
+            throw new NotFoundException();
+         }
+         account.setAvatar(avartar);
+         accountRepo.save(account);
+        return "upload avatar success";
+    }
 }
  

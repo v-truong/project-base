@@ -9,8 +9,9 @@ import com.example.security.dto.account.Createaccount;
 import com.example.security.entity.Account;
 
 public interface AccountSevice {
-    public String showTest();
-    public String createAccount(Createaccount createaccount)throws DuplicateKeyException,IllegalAccessException, InvocationTargetException, NoSuchMethodException;
+    String showTest();
+    String createAccount(Createaccount createaccount)throws DuplicateKeyException,IllegalAccessException, InvocationTargetException, NoSuchMethodException;
     void saveUserVerificationToken(Account account, String verificationToken);
     String verifyEmail(String token) throws NotFoundException;
+    String Postavatar(String id,String avartar) throws NotFoundException;
 }

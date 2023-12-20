@@ -1,7 +1,12 @@
 package com.example.security.ctrl;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.common.model.ThreadContext;
 import com.example.security.dto.AuthRequest;
@@ -30,9 +36,11 @@ import jakarta.servlet.http.HttpServletRequest;
 
 
 
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class AccountCtrl {
+      private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
 
     @Autowired  
     private JwtService jwtService;
@@ -98,5 +106,20 @@ public class AccountCtrl {
     public String applicationUrl(HttpServletRequest request) {
         return "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
     }
-
+    @PostMapping("replace-avatar")
+    public String PostAvartar(@RequestParam("id") String id,@RequestParam("avatar") MultipartFile avatar) throws IOException, NotFoundException {
+        Path staticPath = Paths.get("static");
+        Path imagePath = Paths.get("images");
+        if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
+            Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
+        }
+        Path file = CURRENT_FOLDER.resolve(staticPath)
+                .resolve(imagePath).resolve(avatar.getOriginalFilename());
+        try (OutputStream os = Files.newOutputStream(file)) {
+            os.write(avatar.getBytes());
+        }
+        // accountSevice.Postavatar(id, imagePath.resolve(avatar.getOriginalFilename()).toString());
+        return accountSevice.Postavatar(id, imagePath.resolve(avatar.getOriginalFilename()).toString());
+    }
+    
 }
