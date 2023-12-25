@@ -57,4 +57,6 @@ public abstract class EntityBase {
   @LastModifiedBy
   @Column(name = "modified_user")
   private String modifiedUser;
+  @Column(name="isdelete")
+  private boolean isDelete =true;
 }

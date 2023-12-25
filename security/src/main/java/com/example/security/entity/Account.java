@@ -1,13 +1,6 @@
 package com.example.security.entity;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import com.example.common.config.Constants;
 import com.example.common.entity.EntityBase;
-import com.example.common.model.ThreadContext;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -33,6 +26,8 @@ public class Account extends EntityBase{
 
    @Column(name = "email")
   private String email;
+  @Column(name = "phone")
+  private String Phone;
 
   @Column(name = "roles")
   private String roles;
@@ -43,4 +38,5 @@ public class Account extends EntityBase{
   private String token;
   @Column(name = "avartar")
   private String avatar;
+
 }

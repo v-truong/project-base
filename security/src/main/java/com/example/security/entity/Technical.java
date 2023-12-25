@@ -2,20 +2,20 @@ package com.example.security.entity;
 
 import com.example.common.entity.EntityBase;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity 
-@Table(name="category")
-public class Category extends EntityBase {
-    @Column(name="name")
-    private String Name;
+public class Technical extends EntityBase {
+    private String name;
+    private String unit;
+    private boolean isDelete;
+    
+    
 }

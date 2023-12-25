@@ -12,6 +12,7 @@ public interface Constants {
     public static final String ROLE_LDC="LDC";//role lãnh đạo cục
     public static final String ROLE_CBB="CBB";//role cán bộ Bộ
     public static final String ROLE_CBC="CBC";//role cán bộ cục
+    public static final boolean isDeleteTrue= true;
     // public static final String  STATUS_CBC=
 
 }

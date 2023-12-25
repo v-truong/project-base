@@ -2,9 +2,9 @@ server:
   port: 9023
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ShopTruong
-    username: root
-    password: 
+    url: jdbc:mysql://yashgemjewelleries.cbj4aikacpbj.ap-southeast-2.rds.amazonaws.com:3306/ShopManagement
+    username: hoainam
+    password: hoainam1212
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
