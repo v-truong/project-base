@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/v1/province")
 public class ProvinceCtrl {
     @Autowired ProvincesService provincesService;
-    @GetMapping("getall")
-    public List<Province> getMethodName(@RequestParam String param) {
+    @GetMapping("/getall")
+    public List<Province> getAll() {
         return provincesService.GetAllProvinces();
     }
-    
-    
 }

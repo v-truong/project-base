@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="productitem")
+@Table(name="product_item")
 public class ProductItem extends EntityBase{
     @Column(name = "name")
     private String Name;

@@ -6,6 +6,8 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,7 +23,7 @@ import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class ExceptionConfig {
-     @ExceptionHandler(ConstraintViolationException.class)
+  @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
   ValidationErrorResponse onConstraintValidationException(ConstraintViolationException e) {///vi pham khóa contrain
@@ -80,7 +82,25 @@ public class ExceptionConfig {
     setErrorInfo(error, "API-006", e.getMessage());
     return error;
   }
-  
+  @ExceptionHandler(IllegalArgumentException  .class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  @ResponseBody
+  ErrorResponse onIllegalArgumentException (IllegalArgumentException e) {
+    ErrorResponse error = new ErrorResponse();
+    setErrorInfo(error, "API-007", e.getMessage());
+    return error;
+  }
+  @ExceptionHandler(AccessDeniedException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  @ResponseBody
+  ErrorResponse onAccessDeniedException (IllegalArgumentException e) {
+    ErrorResponse error = new ErrorResponse();
+    setErrorInfo(error, "API-008", e.getMessage());
+    return error;
+  }
+
+
+
   private void setErrorInfo(ErrorResponse error, String errorCode, String defaultMessage) {
     error.setErrorCode(errorCode);
     String msg = Messages.getString("api.error." + errorCode, defaultMessage);

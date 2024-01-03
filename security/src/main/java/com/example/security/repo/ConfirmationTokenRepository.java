@@ -10,7 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.security.entity.ConfirmationToken;
 
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationToken, String>{
         Optional<ConfirmationToken> findByToken(String token);
 

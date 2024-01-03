@@ -7,10 +7,8 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.common.config.Constants;
-import com.example.common.util.DaoConst;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -18,8 +16,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,8 +36,7 @@ public abstract class EntityBase {
   // @UuidGenerator(style="UUID")
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
-  @Past
-  @DateTimeFormat(pattern = "yyyyMMddHHmmss")
+  // @Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date-time.Pattern.message}")
   @CreatedDate
   @Column(name = "created_date", updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
   private LocalDateTime createdDate;
@@ -57,6 +52,6 @@ public abstract class EntityBase {
   @LastModifiedBy
   @Column(name = "modified_user")
   private String modifiedUser;
-  @Column(name="isdelete")
-  private boolean isDelete =true;
+  @Column(name = "is_delete")
+  private Integer isDelete =0;
 }

@@ -1,28 +1,5 @@
 package com.example.security.ctrl;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
-import org.springframework.http.HttpStatus;
-
-
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.example.common.model.ThreadContext;
 import com.example.security.dto.AuthRequest;
 import com.example.security.dto.account.Createaccount;
@@ -31,8 +8,28 @@ import com.example.security.event.RegistrationCompleteEvent;
 import com.example.security.repo.AccountRepo;
 import com.example.security.service.AccountSevice;
 import com.example.security.service.JwtService;
-
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
+
 
 
 
@@ -62,14 +59,14 @@ public class AccountCtrl {
    }
    @PostMapping("/login")
    @ResponseStatus(HttpStatus.OK)
-   public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+   public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) throws NotFoundException {
        Optional<Account> account =accountRepo.findByUsername(authRequest.getUsername());
        if(!account.isPresent()){
-         throw new UsernameNotFoundException("account does not exist"); 
+           throw new NotFoundException();
        }
        Account accountget = account.get();
        if (accountget.isEnabled()==false) {
-        throw new UsernameNotFoundException("If you do not activate your account, your account will be deleted one minute after registration"); 
+           throw new NotFoundException();
           
        }
        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -77,7 +74,7 @@ public class AccountCtrl {
            
            return jwtService.generateToken(authRequest.getUsername());
        } else {
-           throw new UsernameNotFoundException("invalid user request !");
+           throw new NotFoundException();
        }
      
    }
@@ -86,11 +83,19 @@ public class AccountCtrl {
     public String register(@RequestBody Createaccount createaccount, final HttpServletRequest request) throws DuplicateKeyException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
            accountSevice.createAccount(createaccount);
            Account account = new Account();
+
            PropertyUtils.copyProperties(account, createaccount);
               publisher.publishEvent(new RegistrationCompleteEvent(account, applicationUrl(request)));
-           return "okkkkkk";
+           return "Successful registration, please verify email";
     }
-   @PostMapping("/registers")
+    @PostMapping("forgot")
+    @ResponseStatus(HttpStatus.OK)
+    public String forget(){
+
+        return "ok";
+    }
+
+    @PostMapping("/registers")
     @ResponseStatus(HttpStatus.OK)
     public String registers(){
            return "ok";
@@ -121,5 +126,18 @@ public class AccountCtrl {
         // accountSevice.Postavatar(id, imagePath.resolve(avatar.getOriginalFilename()).toString());
         return accountSevice.Postavatar(id, imagePath.resolve(avatar.getOriginalFilename()).toString());
     }
+    @GetMapping("/testserver")
+    @ResponseStatus(HttpStatus.OK)
+    public String getMethodName() throws NotFoundException {
+        throw new NotFoundException() ;
+    }
+    @GetMapping("/testserver1")
+    @ResponseStatus(HttpStatus.OK)
+    public String getMethodName1() {
+        System.out.println("okokoko=========================");
+       return "chay dc" ;
+    }
+
+    
     
 }

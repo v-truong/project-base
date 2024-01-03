@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 
-import com.example.security.dto.Product.SearchProductRequest;
+import com.example.security.dto.product.SearchProductRequest;
 import com.example.security.entity.Product;
 import com.example.security.entity.Provider;
 

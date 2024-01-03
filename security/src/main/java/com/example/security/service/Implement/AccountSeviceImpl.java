@@ -31,6 +31,7 @@ public class AccountSeviceImpl implements AccountSevice {
     public String createAccount(Createaccount createaccount)throws  IllegalAccessException, InvocationTargetException, NoSuchMethodException{
         Optional<Account> accountMail = accountRepo.findByEmail(createaccount.getEmail());
         Optional<Account> accountUsernName =accountRepo.findByUsername(createaccount.getUsername());
+//        if ()
         if (accountUsernName.isPresent()){
            throw new DuplicateKeyException(
                    "User with email "+createaccount.getEmail() + " already exists");
@@ -42,8 +43,9 @@ public class AccountSeviceImpl implements AccountSevice {
        
        Account account =new Account();
        PropertyUtils.copyProperties(account, createaccount);
-    accountRepo.save(account);
-        return "ok";
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+       accountRepo.save(account);
+        return "Successful registration, please verify email";
     }
     @Override
     public void saveUserVerificationToken(Account account, String token) {

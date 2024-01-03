@@ -6,16 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.security.entity.District;
-import com.example.security.repo.DistrictsRepo;
+import com.example.security.repo.DistrictRepo;
 import com.example.security.service.DistrictsService;
 
 @Service
 public class DistrictsImpl implements DistrictsService {
-    @Autowired private DistrictsRepo districtsRepo;
+    @Autowired private DistrictRepo districtRepo;
     @Override
     public List<District> getAllDistricts() {
         
-        return districtsRepo.findAll();
+        return districtRepo.findAll();
     }
-    
+
+    @Override
+    public List<District> getAllByProvincecode(String provincecode) {
+        return districtRepo.findAllByProvinceCode(provincecode);
+    }
+
 }

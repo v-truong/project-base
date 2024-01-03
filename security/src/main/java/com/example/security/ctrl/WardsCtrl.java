@@ -2,24 +2,26 @@ package com.example.security.ctrl;
 
 import java.util.List;
 
+import com.example.security.entity.District;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.security.entity.Ward;
 import com.example.security.service.WardsService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping("/api/v1/wards")
+@RequestMapping("/api/v1/ward")
 public class WardsCtrl {
     @Autowired private WardsService wardsService;
-    @PostMapping("/getall")
-    public List<Ward> getMethodName(@RequestParam String param) {
+    @GetMapping("/getall")
+    public List<Ward> getMethodName() {
         return wardsService.getAllWards();
     }
+    @GetMapping("/getbydistrictcode")
+    public List<Ward> getbyProvinceCode(@RequestParam("districtcode") String districtcode){
+        return wardsService.getAllByDistrictCode(districtcode);
+    }
+
     
 }

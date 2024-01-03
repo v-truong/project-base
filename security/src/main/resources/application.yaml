@@ -1,6 +1,8 @@
 server:
   port: 9023
 spring:
+  aop:
+    auto: true
   datasource:
     url: jdbc:mysql://yashgemjewelleries.cbj4aikacpbj.ap-southeast-2.rds.amazonaws.com:3306/ShopManagement
     username: hoainam

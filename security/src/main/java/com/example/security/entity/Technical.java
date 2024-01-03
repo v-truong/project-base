@@ -15,7 +15,6 @@ import lombok.Setter;
 public class Technical extends EntityBase {
     private String name;
     private String unit;
-    private boolean isDelete;
     
     
 }

@@ -23,6 +23,9 @@ public class Product extends EntityBase{
     private String Description;
     @Column(name="category_Id")
     private String categoryId;
+    @Column(name="brand_id")
+    private  String brandId;
+
     
 
     
