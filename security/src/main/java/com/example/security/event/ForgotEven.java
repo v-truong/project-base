@@ -9,11 +9,11 @@ import org.springframework.context.ApplicationEvent;
 
 public class ForgotEven extends ApplicationEvent {
     private Account account;
-    private String applicationUrl;
 
-    public ForgotEven(Account account, String applicationUrl) {
+
+    public ForgotEven(Account account) {
         super(account);
         this.account = account;
-        this.applicationUrl = applicationUrl;
+
     }
 }

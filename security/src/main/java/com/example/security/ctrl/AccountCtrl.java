@@ -3,7 +3,11 @@ package com.example.security.ctrl;
 import com.example.common.model.ThreadContext;
 import com.example.security.dto.AuthRequest;
 import com.example.security.dto.account.Createaccount;
+import com.example.security.dto.account.ForgotPasswordRequest;
+import com.example.security.dto.account.GetAccountDto;
+import com.example.security.dto.account.UpdateAccountRequest;
 import com.example.security.entity.Account;
+import com.example.security.event.ForgotEven;
 import com.example.security.event.RegistrationCompleteEvent;
 import com.example.security.repo.AccountRepo;
 import com.example.security.service.AccountSevice;
@@ -35,6 +39,7 @@ import java.util.Optional;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1/users")
 public class AccountCtrl {
       private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
@@ -59,7 +64,7 @@ public class AccountCtrl {
    }
    @PostMapping("/login")
    @ResponseStatus(HttpStatus.OK)
-   public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) throws NotFoundException {
+   public GetAccountDto authenticateAndGetToken(@RequestBody AuthRequest authRequest) throws NotFoundException {
        Optional<Account> account =accountRepo.findByUsername(authRequest.getUsername());
        if(!account.isPresent()){
            throw new NotFoundException();
@@ -71,8 +76,15 @@ public class AccountCtrl {
        }
        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
        if (authentication.isAuthenticated()) {
-           
-           return jwtService.generateToken(authRequest.getUsername());
+           GetAccountDto getAccountDto=new GetAccountDto();
+           getAccountDto.setName(accountget.getName());
+           getAccountDto.setToken(jwtService.generateToken(authRequest.getUsername()));
+           getAccountDto.setAvatar(accountget.getAvatar());
+           getAccountDto.setUsername(accountget.getUsername());
+           getAccountDto.setPhone(accountget.getPhone());
+           getAccountDto.setId(accountget.getId());
+
+           return getAccountDto;
        } else {
            throw new NotFoundException();
        }
@@ -90,7 +102,16 @@ public class AccountCtrl {
     }
     @PostMapping("forgot")
     @ResponseStatus(HttpStatus.OK)
-    public String forget(){
+    public String forget(@RequestBody ForgotPasswordRequest request) throws NotFoundException {
+        Optional<Account> account=accountRepo.findByUsername(request.getUsername());
+        if (!account.isPresent()) {
+            throw new NotFoundException();
+        }
+        Account accountget = account.get();
+        if (!accountget.getEmail().equals(request.getEmail())) {
+            throw new NotFoundException();
+        }
+        publisher.publishEvent(new ForgotEven(accountget));
 
         return "ok";
     }
@@ -137,6 +158,13 @@ public class AccountCtrl {
         System.out.println("okokoko=========================");
        return "chay dc" ;
     }
+    @PostMapping("/updateaccount")
+    @ResponseStatus(HttpStatus.OK)
+    public String updateaccount(@RequestBody UpdateAccountRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+       return accountSevice.updateAccount(request);
+    }
+
+
 
     
     

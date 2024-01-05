@@ -1,22 +1,20 @@
 package com.example.security.service.Implement;
 
+import com.example.common.util.SearchUtil;
+import com.example.security.dto.product.SearchProductRequest;
+import com.example.security.entity.Product;
+import com.example.security.repo.ProductRepo;
+import com.example.security.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.example.common.util.SearchUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
-import org.springframework.data.domain.Page;
-
-import com.example.security.dto.product.SearchProductRequest;
-import com.example.security.entity.Product;
-import com.example.security.entity.Provider;
-import com.example.security.repo.ProductRepo;
-import com.example.security.service.ProductService;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ProductImpl implements ProductService{
@@ -62,9 +60,22 @@ public class ProductImpl implements ProductService{
     }
 
     @Override
-    public Page<Provider> advanceSearch(String filter, SearchProductRequest searchProductRequest, Pageable pageable) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'advanceSearch'");
+    public Page<Product> advanceSearch(String filter, SearchProductRequest searchProductRequest, Pageable pageable) {
+        if (searchProductRequest != null) {
+            List<Specification<Product>> specList = getAdvanceSearchSpecList(searchProductRequest);
+            if (filter != null && !filter.isEmpty()) {
+                specList.add(SearchUtil.like("fullTextSearch", "%" + filter + "%"));
+            }
+            if (specList.size() > 0) {
+                Specification<Product> spec = specList.get(0);
+                for (int i = 1; i < specList.size(); i++) {
+                    spec = spec.and(specList.get(i));
+
+                }
+                return productRepo.findAll(spec,pageable);
+            }
+        }
+        return productRepo.findAll(pageable);
     }
     private List<Specification<Product>> getAdvanceSearchSpecList(SearchProductRequest s){
         List<Specification<Product>> speclít=new ArrayList<>();
@@ -72,8 +83,12 @@ public class ProductImpl implements ProductService{
             speclít.add(SearchUtil.like("name","%"+s.getName()+"%"));
         }
         if (s.getBrandId()!=null && !s.getBrandId().isEmpty()){
-
+            speclít.add(SearchUtil.eq("brandId",s.getBrandId()));
         }
+        if (s.getCategoryId()!=null && !s.getBrandId().isEmpty()){
+            speclít.add(SearchUtil.eq("categoryId",s.getBrandId()));
+        }
+
         return  speclít;
     }
 

@@ -1,6 +1,5 @@
 package com.example.security.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.security.filter.JwtAuthFilter;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -45,18 +45,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable();
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/users/**",
-                        "/api/v1/users/login",
-                        "/api/v1/product/**").permitAll()
+                .requestMatchers("/api/v1/users/**","/api/v1/users/login","/swagger-ui.html").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers(
-                        "/api/v1/ward/**",
-                        "/api/v1/province/**",
-                        "/api/v1/district/**",
-                        "/api/v1/brand/**",
-                        "/api/v1/category/**")
+                .authorizeHttpRequests().requestMatchers("/api/v1/product/**","/api/v1/province/**","/api/v1/ward","/api/v1/district")
                 .authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

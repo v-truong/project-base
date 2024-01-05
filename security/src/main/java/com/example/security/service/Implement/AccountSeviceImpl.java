@@ -1,7 +1,12 @@
 package com.example.security.service.Implement;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
 import java.util.Optional;
+
+import com.example.common.model.ThreadContext;
+import com.example.security.dto.account.ForgotPasswordRequest;
+import com.example.security.dto.account.UpdateAccountRequest;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +57,7 @@ public class AccountSeviceImpl implements AccountSevice {
     }
     @Override
     public String verifyEmail(String token) throws NotFoundException {
-        Account account = accountRepo.findByToken(token);
+        Account account = accountRepo.findByTokenEmail(token);
         if (account==null) {
           return "saiiiiiiii";
         }
@@ -70,5 +75,35 @@ public class AccountSeviceImpl implements AccountSevice {
          accountRepo.save(account);
         return "upload avatar success";
     }
+
+    @Override
+    public String forgotPassword(ForgotPasswordRequest request) throws NotFoundException {
+        Account account=accountRepo.findByUsername(request.getUsername()).get();
+        if (account==null) {
+            throw new NotFoundException();
+        }
+        if (!account.getEmail().equals(request.getEmail())) {
+            throw new NotFoundException();
+        }
+        return "Password has been sent to email";
+
+
+
+        }
+
+    @Override
+    public String updateAccount(UpdateAccountRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        Optional<Account> account=accountRepo.findById(ThreadContext.getCustomUserDetails().getId());
+        if (!account.isPresent()){
+            throw new NotFoundException();
+        }
+        Account accountget=account.get();
+        PropertyUtils.copyProperties(accountget,request);
+        accountget.setModifiedDate(LocalDateTime.now());
+        accountget.setModifiedUser(ThreadContext.getCustomUserDetails().getUsername());
+        accountRepo.save(accountget);
+        return "Success";
+    }
+
 }
  

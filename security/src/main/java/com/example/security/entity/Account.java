@@ -34,9 +34,8 @@ public class Account extends EntityBase{
 
   @Column(name = "isenabled")
   private boolean isEnabled = false;
-  @Column(name = "token")
-  private String token;
+  @Column(name = "tokenemail")
+  private String tokenEmail;
   @Column(name = "avartar")
   private String avatar;
-
 }

@@ -11,4 +11,6 @@ import java.util.List;
 public interface BrandService {
     List<Brand> getAll();
     String create(CreateBandRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException;
+    String deleteAllListById(List<String> Ids);
+
 }

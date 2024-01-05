@@ -22,4 +22,5 @@ public class Brand extends EntityBase {
     private String logo;
 
 
+
 }
