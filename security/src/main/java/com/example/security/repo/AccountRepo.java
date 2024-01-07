@@ -10,6 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepo extends JpaRepository<Account,String> {
     Optional<Account> findByUsername(String username);
     Optional<Account> findByEmail(String email);
-    Account findByTokenEmail(String token);
 
 }

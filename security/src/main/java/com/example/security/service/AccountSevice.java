@@ -12,7 +12,7 @@ import com.example.security.entity.Account;
 
 public interface AccountSevice {
     String showTest();
-    String createAccount(Createaccount createaccount)throws DuplicateKeyException,IllegalAccessException, InvocationTargetException, NoSuchMethodException;
+    String createAccount(Createaccount createaccount) throws DuplicateKeyException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NotFoundException;
     void saveUserVerificationToken(Account account, String verificationToken);
     String verifyEmail(String token) throws NotFoundException;
     String Postavatar(String id,String avartar) throws NotFoundException;

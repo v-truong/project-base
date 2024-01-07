@@ -43,7 +43,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         //3. Save the verification token for the user
         Optional<Account> accOptional = accountRepo.findByUsername(theUser.getUsername());
         Account account =accOptional.get();
-        account.setTokenEmail(verificationToken);
+//        account.setTokenEmail(verificationToken);
         accountRepo.save(account);
         //4 Build the verification url to be sent to the user
         String url = event.getApplicationUrl()+"/api/v1/users/verifyEmail?token="+verificationToken;

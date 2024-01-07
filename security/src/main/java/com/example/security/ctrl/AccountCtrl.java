@@ -2,13 +2,10 @@ package com.example.security.ctrl;
 
 import com.example.common.model.ThreadContext;
 import com.example.security.dto.AuthRequest;
-import com.example.security.dto.account.Createaccount;
-import com.example.security.dto.account.ForgotPasswordRequest;
-import com.example.security.dto.account.GetAccountDto;
-import com.example.security.dto.account.UpdateAccountRequest;
+import com.example.security.dto.account.*;
 import com.example.security.entity.Account;
 import com.example.security.event.ForgotEven;
-import com.example.security.event.RegistrationCompleteEvent;
+import com.example.security.event.SendcodeEmailEven;
 import com.example.security.repo.AccountRepo;
 import com.example.security.service.AccountSevice;
 import com.example.security.service.JwtService;
@@ -22,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,6 +49,7 @@ public class AccountCtrl {
     private AuthenticationManager authenticationManager;
     @Autowired private AccountRepo accountRepo;
 
+
    @GetMapping()
    public String a(){
     if(ThreadContext.getCustomUserDetails().getRole() == "admin"){
@@ -62,6 +59,44 @@ public class AccountCtrl {
     return "sai user";
 
    }
+   @PostMapping("/sendcodeEmail")
+   public String sendCodeEmail(@RequestBody SendCodeRequest request){
+       Optional<Account> account =accountRepo.findByEmail(request.getEmail());
+      if(account.isPresent()){
+         throw new DuplicateKeyException("da ton tai");
+     }
+       Account accountsend=new Account();
+       accountsend.setEmail(request.getEmail());
+       accountsend.setCreatedUser(request.getEmail());
+       accountRepo.save(accountsend);
+       publisher.publishEvent(new SendcodeEmailEven(accountsend));
+
+       return "Success";
+    }
+    @PostMapping("/sendcodeEmailfogot")
+    public String sendCodeEmailForgot(@RequestBody FogotSendmaillRequest request) throws NotFoundException {
+        Optional<Account> account =accountRepo.findByUsername(request.getUsername());
+        if(!account.isPresent()){
+            throw new NotFoundException();
+        }
+        Account accountsend=account.get();
+        publisher.publishEvent(new ForgotEven(accountsend));
+        return accountsend.getEmail();
+    }
+    @PostMapping("/fogot")
+    public String fogot(@RequestBody ForgotPasswordRequest request) throws NotFoundException {
+        Optional<Account> account =accountRepo.findByUsername(request.getUsername());
+        if(!account.isPresent()){
+            throw new NotFoundException();
+        }
+        Account accountsend=account.get();
+        if (!request.getCode().equals(accountsend.getCode())){
+            throw new DuplicateKeyException("code fall");
+        }
+       return "Success";
+    }
+
+
    @PostMapping("/login")
    @ResponseStatus(HttpStatus.OK)
    public GetAccountDto authenticateAndGetToken(@RequestBody AuthRequest authRequest) throws NotFoundException {
@@ -92,26 +127,26 @@ public class AccountCtrl {
    }
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
-    public String register(@RequestBody Createaccount createaccount, final HttpServletRequest request) throws DuplicateKeyException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
+    public String register(@RequestBody Createaccount createaccount, final HttpServletRequest request) throws DuplicateKeyException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NotFoundException {
            accountSevice.createAccount(createaccount);
            Account account = new Account();
 
            PropertyUtils.copyProperties(account, createaccount);
-              publisher.publishEvent(new RegistrationCompleteEvent(account, applicationUrl(request)));
            return "Successful registration, please verify email";
     }
     @PostMapping("forgot")
     @ResponseStatus(HttpStatus.OK)
-    public String forget(@RequestBody ForgotPasswordRequest request) throws NotFoundException {
+    public String forget(@RequestBody ForgotPasswordRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         Optional<Account> account=accountRepo.findByUsername(request.getUsername());
         if (!account.isPresent()) {
             throw new NotFoundException();
         }
         Account accountget = account.get();
-        if (!accountget.getEmail().equals(request.getEmail())) {
+        if (!accountget.getCode().equals(request.getCode())) {
             throw new NotFoundException();
         }
-        publisher.publishEvent(new ForgotEven(accountget));
+        PropertyUtils.copyProperties(accountget,request);
+        accountRepo.save(accountget);
 
         return "ok";
     }
