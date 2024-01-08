@@ -20,7 +20,7 @@ public class Product extends EntityBase{
     // @Column(name = "price")
     // private String price;productitem\
     @Column(name="description")
-    private String Description;
+    private String description;
     @Column(name="category_Id")
     private String categoryId;
     @Column(name="brand_id")

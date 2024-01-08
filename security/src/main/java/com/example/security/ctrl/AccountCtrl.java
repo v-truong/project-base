@@ -198,6 +198,9 @@ public class AccountCtrl {
     public String updateaccount(@RequestBody UpdateAccountRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
        return accountSevice.updateAccount(request);
     }
+//    PostMapping(){
+//
+//    }
 
 
 

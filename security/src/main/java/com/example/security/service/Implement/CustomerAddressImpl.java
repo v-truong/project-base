@@ -20,11 +20,11 @@ import java.util.Optional;
 @Service
 public class CustomerAddressImpl implements CustomerAddressService {
     @Autowired
-    CustomerAddressRepo customerAddressRepo;
+    private  CustomerAddressRepo customerAddressRepo;
 
     @Override
     public List<CustomerAddress> GetDetail(String CustomerId,int isDelete) {
-        List<CustomerAddress> Addresses = customerAddressRepo.FindAllByCustomerId(CustomerId,isDelete);
+        List<CustomerAddress> Addresses = customerAddressRepo.findAllByCustomerIdAndIsDelete(CustomerId,isDelete);
         return Addresses;
     }
 

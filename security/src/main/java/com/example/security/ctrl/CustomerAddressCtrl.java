@@ -13,24 +13,24 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/customer/address")
+@RequestMapping("/api/v1/customeraddress")
 public class CustomerAddressCtrl {
-    @Autowired
+    @Autowired private
     CustomerAddressService customerAddressService;
 
     @GetMapping("/getDetail/{cid}")
     public List<CustomerAddress> getDetail(@PathVariable String CustomerId){
         return customerAddressService.GetDetail(CustomerId,Constants.ISDELETE_TRUE);
     }
-    @PostMapping("/updateAddress/")
+    @PostMapping("/updateAddress")
     public String updateAddress(@RequestBody UpdateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         return customerAddressService.Edit(request);
     }
-    @PostMapping("/createAddress/")
+    @PostMapping("/createAddress")
     public String createAddress(@RequestBody CreateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         return customerAddressService.Create(request);
     }
-    @PostMapping("/deleteAddress/")
+    @PostMapping("/deleteAddress")
     public String createAddress(List<String> request){
         return customerAddressService.Delete(request);
     }

@@ -3,8 +3,6 @@ package com.example.security.entity;
 import com.example.common.entity.EntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +27,7 @@ public class Account extends EntityBase{
   @Column(name = "email")
   private String email;
   @Column(name = "phone")
-  private String Phone;
+  private String phone;
 
   @Column(name = "roles")
   private String roles;
