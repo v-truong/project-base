@@ -4,6 +4,7 @@ package com.example.security.ctrl;
 import com.example.common.config.Constants;
 import com.example.security.dto.customer.CreateAddressRequest;
 import com.example.security.dto.customer.UpdateAddressRequest;
+import com.example.security.entity.Customer;
 import com.example.security.entity.CustomerAddress;
 import com.example.security.service.CustomerAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,9 @@ public class CustomerAddressCtrl {
     @Autowired
     CustomerAddressService customerAddressService;
 
-    @GetMapping("/getDetail/{cid}")
-    public List<CustomerAddress> getDetail(@PathVariable String CustomerId){
-        return customerAddressService.GetDetail(CustomerId,Constants.ISDELETE_TRUE);
+    @GetMapping("/getDetail/")
+    public List<CustomerAddress> getDetail(@RequestBody Customer Customer){
+        return customerAddressService.GetDetail(Customer.getCustomerId(),Constants.ISDELETE_TRUE);
     }
     @PostMapping("/updateAddress/")
     public String updateAddress(@RequestBody UpdateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {

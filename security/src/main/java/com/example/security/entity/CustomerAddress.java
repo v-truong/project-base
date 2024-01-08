@@ -18,11 +18,10 @@ import lombok.Setter;
 @Table(name ="address")
 public class CustomerAddress extends EntityBase {
 
-    @Id
     @Column(name = "address_id")
     private String AddressId;
     @Column(name = "customer_id")
-    private String CustomerId;
+    private String customerId;
     @Column(name = "province_code")
     private String ProvinceCode;
     @Column(name = "district_code")

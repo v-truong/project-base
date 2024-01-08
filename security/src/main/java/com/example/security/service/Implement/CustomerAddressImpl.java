@@ -23,8 +23,8 @@ public class CustomerAddressImpl implements CustomerAddressService {
     CustomerAddressRepo customerAddressRepo;
 
     @Override
-    public List<CustomerAddress> GetDetail(String CustomerId,int isDelete) {
-        List<CustomerAddress> Addresses = customerAddressRepo.FindAllByCustomerId(CustomerId,isDelete);
+    public List<CustomerAddress> GetDetail(String customerId,int isDelete) {
+        List<CustomerAddress> Addresses = customerAddressRepo.findAllByCustomerId(customerId,isDelete);
         return Addresses;
     }
 

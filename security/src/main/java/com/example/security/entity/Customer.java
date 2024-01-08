@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name ="customer")
 public class Customer extends EntityBase {
-    @Id
+
     @Column(name = "customer_id")
     private String CustomerId;
 
