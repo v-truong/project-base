@@ -33,36 +33,32 @@ public class AccountSeviceImpl implements AccountSevice {
 
     }
     @Override
-    public String createAccount(Createaccount createaccount)throws  IllegalAccessException, InvocationTargetException, NoSuchMethodException{
+    public String createAccount(Createaccount createaccount) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, NotFoundException {
         Optional<Account> accountMail = accountRepo.findByEmail(createaccount.getEmail());
-        Optional<Account> accountUsernName =accountRepo.findByUsername(createaccount.getUsername());
-//        if ()
-        if (accountUsernName.isPresent()){
-           throw new DuplicateKeyException(
-                   "User with email "+createaccount.getEmail() + " already exists");
-       }
-        if (accountMail.isPresent()){
-           throw new DuplicateKeyException(
-                   "User with email "+createaccount.getEmail() + " already exists");
-       }
-       
-       Account account =new Account();
-       PropertyUtils.copyProperties(account, createaccount);
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
-       accountRepo.save(account);
-        return "Successful registration, please verify email";
+        if(!accountMail.isPresent()){
+            throw new  NotFoundException();
+        }
+        Account accountget=accountMail.get();
+        if (!accountget.getCode().equals(createaccount.getCode())){
+            throw new DuplicateKeyException("invalid code");
+        }
+        PropertyUtils.copyProperties(accountget, createaccount);
+        accountget.setPassword(passwordEncoder.encode(accountget.getPassword()));
+        accountget.setEnabled(true);
+        accountRepo.save(accountget);
+        return "Success Please log in again";
     }
     @Override
     public void saveUserVerificationToken(Account account, String token) {
     }
     @Override
     public String verifyEmail(String token) throws NotFoundException {
-        Account account = accountRepo.findByTokenEmail(token);
+        Optional<Account> account = accountRepo.findByEmail(token);
         if (account==null) {
           return "saiiiiiiii";
         }
-        account.setEnabled(true);
-        accountRepo.save(account);
+//        account.setEnabled(true);
+//        accountRepo.save(account);
         return"goot";
     }
     @Override
@@ -82,7 +78,7 @@ public class AccountSeviceImpl implements AccountSevice {
         if (account==null) {
             throw new NotFoundException();
         }
-        if (!account.getEmail().equals(request.getEmail())) {
+        if (!account.getEmail().equals(request.getUsername())) {
             throw new NotFoundException();
         }
         return "Password has been sent to email";

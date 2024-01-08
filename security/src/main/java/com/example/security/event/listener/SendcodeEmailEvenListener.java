@@ -1,8 +1,8 @@
 package com.example.security.event.listener;
 
 import com.example.security.entity.Account;
-
-import com.example.security.event.ForgotEven;
+import com.example.security.event.RegistrationCompleteEvent;
+import com.example.security.event.SendcodeEmailEven;
 import com.example.security.repo.AccountRepo;
 import com.example.security.service.Implement.AccountSeviceImpl;
 import jakarta.mail.MessagingException;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -24,17 +23,17 @@ import java.util.UUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ForgotCompleteEventListener implements ApplicationListener<ForgotEven> {
+public class SendcodeEmailEvenListener implements ApplicationListener<SendcodeEmailEven> {
     private final AccountSeviceImpl accountSeviceImpl;
 
     private final JavaMailSender mailSender;
     private Account theUser;
     @Autowired
     private AccountRepo accountRepo;
-    @Autowired private PasswordEncoder passwordEncoder;
+
 
     @Override
-    public void onApplicationEvent(ForgotEven event) {
+    public void onApplicationEvent(SendcodeEmailEven event) {
         // 1. Get the newly registered user
         theUser = event.getAccount();
         //2. Create a verification token for the user
@@ -56,14 +55,16 @@ public class ForgotCompleteEventListener implements ApplicationListener<ForgotEv
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+
     }
-    public void sendVerificationEmail(Integer randomNumber) throws MessagingException, UnsupportedEncodingException {
-        String subject = "Email forgot pass";
-        String senderName = "The user logs into the portal to change the password";
-        String mailContent = "<p> Hi, "+ theUser.getName()+ ", </p>"+
-                "<p>Thank you for registering with us,"+"" +
-                "Now log in with the new password we provided.</p>"+
-                "<p >A new password : "+randomNumber+"</p>"+
+
+    public void sendVerificationEmail(Integer ramdomcode) throws MessagingException, UnsupportedEncodingException {
+        String subject = "Email code";
+        String senderName = "User Registration Portal Service";
+        String mailContent = "<p> Hi, " + theUser.getName() + ", </p>" +
+                "<p>Thank you for registering with us," + "" +
+                "Please, follow the link below to complete your registration.</p>" +
+                "<p >A new password : "+ramdomcode+"</p>"+
                 "<p> Thank you <br> Users Registration Portal Service";
         MimeMessage message = mailSender.createMimeMessage();
         var messageHelper = new MimeMessageHelper(message);
@@ -72,5 +73,7 @@ public class ForgotCompleteEventListener implements ApplicationListener<ForgotEv
         messageHelper.setSubject(subject);
         messageHelper.setText(mailContent, true);
         mailSender.send(message);
+
     }
+
 }

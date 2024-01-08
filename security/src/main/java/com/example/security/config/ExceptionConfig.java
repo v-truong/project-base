@@ -60,8 +60,7 @@ public class ExceptionConfig {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ResponseBody
   ErrorResponse onDuplicateKeyException(DuplicateKeyException e) {
-    ErrorResponse error = new ErrorResponse();
-    setErrorInfo(error, "API-004", e.getMessage());
+    ErrorResponse error = new ErrorResponse(0,"API-004",e.getMessage());
     return error;
   }
   

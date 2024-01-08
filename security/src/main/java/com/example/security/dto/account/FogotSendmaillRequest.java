@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForgotPasswordRequest {
+public class FogotSendmaillRequest {
     private String username;
-    private Integer code;
-
 }
