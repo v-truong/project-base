@@ -16,6 +16,6 @@ import lombok.Setter;
 @Entity 
 @Table(name="category")
 public class Category extends EntityBase {
-    @Column(name="name")
-    private String Name;
+    @Column(name="name", updatable = false, nullable = false)
+    private String name;
 }
