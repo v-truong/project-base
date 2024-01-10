@@ -198,9 +198,18 @@ public class AccountCtrl {
     public String updateaccount(@RequestBody UpdateAccountRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
        return accountSevice.updateAccount(request);
     }
-//    PostMapping(){
-//
-//    }
+    @GetMapping("/checktoken")
+    @ResponseStatus(HttpStatus.OK)
+    public String checktoken() throws NotFoundException {
+       if(ThreadContext.getCustomUserDetails().getUsername()==null||ThreadContext.getCustomUserDetails().getUsername().isEmpty()){
+           throw new NotFoundException();
+       }
+       return "Success";
+    }
+
+
+
+
 
 
 

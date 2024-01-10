@@ -8,5 +8,6 @@ import java.util.List;
 public interface CategoryService {
     List<Category> getall();
     String create(CreateCategoryRequest request);
+    List<String> findTechnicallCategoryId(String categoryid);
 
 }

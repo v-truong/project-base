@@ -8,15 +8,10 @@ public interface Constants {
     public static final String ZERO_UUID = "00000000-0000-0000-0000-000000000000";
     public static final String PATTERN_PASSWORD = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
     public static final int DEFAULT_PAGE_SIZE_MAX = 1000;
-    public static final String ROLE_LBB="LDB";//role lãnh dạo bộ
-    public static final String ROLE_LDC="LDC";//role lãnh đạo cục
-    public static final String ROLE_CBB="CBB";//role cán bộ Bộ
-    public static final String ROLE_CBC="CBC";//role cán bộ cục
     public  static  final int ISDELETE_TRUE =0;//data chua xoa
 
     public  static  final int ISDELETE_FALSE =1;//data da xoa
     public  static  final String ROLE_ADMIN="0";
     public  static  final String ROLE_SALESPERSON="1";
     public  static  final String ROLE_BUYER="2";
-
 }
