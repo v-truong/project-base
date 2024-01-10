@@ -27,7 +27,7 @@ public class CustomerImpl implements CustomerService {
         if(ThreadContext.getCustomUserDetails().getRole()!=Constants.ROLE_SALESPERSON){
             throw new AccessDeniedException("api.error.API-008");
         }
-        return customerRepo.findAllByIsDelete(Constants.ISDELETE_TRUE);
+        return customerRepo.findAllByIsDelete(isDelete);
     }
 
     @Override

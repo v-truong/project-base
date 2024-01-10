@@ -25,19 +25,19 @@ public class CustomerCtrl {
     public Customer getDetail(@PathVariable String CustomerId){
         return customerService.getById(CustomerId);
     }
-    @GetMapping("/getDetail/")
+    @GetMapping("/getDetail")
     public List<Customer> getDetail(){
         return customerService.getList(Constants.ISDELETE_TRUE);
     }
-    @PostMapping("/updateCustomer/")
+    @PostMapping("/updateCustomer")
     public String updateAddress(@RequestBody UpdateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         return customerService.edit(request);
     }
-    @PostMapping("/createCustomer/")
+    @PostMapping("/createCustomer")
     public String createAddress(@RequestBody CreateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         return customerService.create(request);
     }
-    @PostMapping("/deleteCustomer/")
+    @PostMapping("/deleteCustomer")
     public String createAddress(List<String> request){
         return customerService.delete(request);
     }
