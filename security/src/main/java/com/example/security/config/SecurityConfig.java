@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/users/**","/api/v1/users/login","/swagger-ui.html").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/v1/product/**","/api/v1/province/**","/api/v1/ward","/api/v1/district","/api/v1/customer","/api/v1/customer/address")
+                .authorizeHttpRequests().requestMatchers("/api/v1/product/**","/api/v1/province/**","/api/v1/ward","/api/v1/district","/api/v1/customer/**","/api/v1/customeraddress/**")
                 .authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
