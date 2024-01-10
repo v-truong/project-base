@@ -14,6 +14,8 @@ import lombok.Setter;
 @Entity
 @Table(name ="customer_address")
 public class CustomerAddress extends EntityBase {
+    @Column(name = "customer_id")
+    private String customerId;
     @Column(name = "province_code")
     private String provinceCode;
     @Column(name = "district_code")
