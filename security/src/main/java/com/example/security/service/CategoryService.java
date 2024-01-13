@@ -10,4 +10,5 @@ public interface CategoryService {
     String create(CreateCategoryRequest request);
     List<String> findTechnicallCategoryId(String categoryid);
 
+
 }

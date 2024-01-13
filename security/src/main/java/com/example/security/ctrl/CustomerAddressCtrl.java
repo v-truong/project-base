@@ -21,7 +21,7 @@ public class CustomerAddressCtrl {
 
     @GetMapping("/getDetail")
     public List<CustomerAddress> getDetail(@RequestBody Customer Customer){
-        return customerAddressService.GetDetail(Customer.getCustomerId(),Constants.ISDELETE_TRUE);
+        return customerAddressService.GetDetail(Customer.getId(),Constants.ISDELETE_TRUE);
     }
     @PostMapping("/updateAddress")
     public String updateAddress(@RequestBody UpdateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
