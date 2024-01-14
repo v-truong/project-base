@@ -4,13 +4,12 @@ import com.example.common.config.Constants;
 import com.example.common.model.ThreadContext;
 import com.example.security.dto.customer.CreateAddressRequest;
 import com.example.security.dto.customer.UpdateAddressRequest;
-import com.example.security.entity.Customer;
 import com.example.security.entity.CustomerAddress;
 import com.example.security.repo.CustomerAddressRepo;
 import com.example.security.service.CustomerAddressService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,9 +28,9 @@ public class CustomerAddressImpl implements CustomerAddressService {
     }
 
     @Override
-    public String Create(CreateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public String Create(CreateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
         if(request.getProvinceId().isEmpty() || request.getDistrictId().isEmpty() || request.getWardId().isEmpty()){
-            return "Phai dien vao required input";
+            throw new NotFoundException();
         }
         CustomerAddress address = new CustomerAddress();
         PropertyUtils.copyProperties(address,request);
@@ -40,10 +39,10 @@ public class CustomerAddressImpl implements CustomerAddressService {
     }
 
     @Override
-    public String Edit(UpdateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public String Edit(UpdateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
         Optional<CustomerAddress> address = customerAddressRepo.findById(ThreadContext.getCustomUserDetails().getId());
         if(address.isPresent()){
-            return "khong tim thay address";
+            throw new NotFoundException();
         }
         CustomerAddress addressGet = address.get();
         PropertyUtils.copyProperties(addressGet,request);

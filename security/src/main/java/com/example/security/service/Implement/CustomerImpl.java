@@ -5,11 +5,11 @@ import com.example.common.model.ThreadContext;
 import com.example.security.dto.customer.CreateCustomerRequest;
 import com.example.security.dto.customer.UpdateCustomerRequest;
 import com.example.security.entity.Customer;
-import com.example.security.entity.CustomerAddress;
 import com.example.security.repo.CustomerRepo;
 import com.example.security.service.CustomerService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -38,9 +38,9 @@ public class CustomerImpl implements CustomerService {
     }
 
     @Override
-    public String create(CreateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public String create(CreateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
         if(request.getName().isEmpty() || request.getEmail().isEmpty() || request.getPhone().isEmpty()){
-            return "Phai dien vao required input";
+            throw new NotFoundException();
         }
         Customer customer = new Customer();
         PropertyUtils.copyProperties(customer,request);
@@ -49,10 +49,10 @@ public class CustomerImpl implements CustomerService {
     }
 
     @Override
-    public String edit(UpdateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public String edit(UpdateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
         Optional<Customer> customer = customerRepo.findById(ThreadContext.getCustomUserDetails().getId());
         if(customer.isPresent()){
-            return "khong tim thay address";
+            throw new NotFoundException();
         }
         Customer customerGet = customer.get();
         PropertyUtils.copyProperties(customerGet,request);
