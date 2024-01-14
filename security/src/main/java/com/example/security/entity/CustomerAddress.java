@@ -34,5 +34,20 @@ public class CustomerAddress extends EntityBase {
     private String Receiver;
     @Column(name = "full_address")
     private String FullAddress;
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String formattedNow = now.format(formatter);
+        setCreatedDate(formattedNow);
+        setModifiedDate(formattedNow);
+    }
+    @PreUpdate
+    protected void onUpdate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String formattedNow = now.format(formatter);
+        setModifiedDate(formattedNow);
+    }
     
 }
