@@ -15,24 +15,20 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name ="address")
+@Table(name ="customer_address")
 public class CustomerAddress extends EntityBase {
-
-    @Column(name = "address_id")
-    private String AddressId;
     @Column(name = "customer_id")
     private String customerId;
     @Column(name = "province_code")
-    private String ProvinceCode;
+    private String provinceCode;
     @Column(name = "district_code")
-    private String DistrictCode;
+    private String districtCode;
     @Column(name = "ward_code")
-    private String WardCode;
+    private String wardCode;
     @Column(name = "additionInfo")
-    private String AdditionInfo;
+    private String additionInfo;
     @Column(name = "receiver")
-    private String Receiver;
+    private String receiver;
     @Column(name = "full_address")
-    private String FullAddress;
-    
+    private String fullAddress;
 }

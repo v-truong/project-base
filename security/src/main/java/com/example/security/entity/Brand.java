@@ -1,13 +1,14 @@
 package com.example.security.entity;
 
 import com.example.common.entity.EntityBase;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Table(name = "brand")
 @Entity
@@ -21,6 +22,21 @@ public class Brand extends EntityBase {
     private  String description;
     private String logo;
 
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String formattedNow = now.format(formatter);
+        setCreatedDate(formattedNow);
+        setModifiedDate(formattedNow);
+    }
+    @PreUpdate
+    protected void onUpdate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String formattedNow = now.format(formatter);
+        setModifiedDate(formattedNow);
+    }
 
 
 }

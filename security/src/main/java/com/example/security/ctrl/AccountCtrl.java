@@ -28,6 +28,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 
@@ -62,9 +65,24 @@ public class AccountCtrl {
    @PostMapping("/sendcodeEmail")
    public String sendCodeEmail(@RequestBody SendCodeRequest request){
        Optional<Account> account =accountRepo.findByEmail(request.getEmail());
-      if(account.isPresent()){
-         throw new DuplicateKeyException("da ton tai");
-     }
+      if(account.isPresent()&&account.get().isEnabled()==false){
+        Account accountget=account.get();
+        LocalDateTime now = LocalDateTime.now();
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+          LocalDateTime inputTime = LocalDateTime.parse(accountget.getModifiedDate(), formatter);
+          long seconds = ChronoUnit.SECONDS.between(inputTime, now);
+          long timeSenTo = 90;
+          if(seconds<=timeSenTo){
+              Long timeremaining=timeSenTo-seconds;
+              return "There is still time to resend the email:  "+timeremaining;
+          }
+          publisher.publishEvent(new SendcodeEmailEven(accountget));
+          return "Success";
+      }
+       if(account.isPresent()&&account.get().isEnabled()==true){
+           throw new DuplicateKeyException("email has been registered");
+       }
+
        Account accountsend=new Account();
        accountsend.setEmail(request.getEmail());
        accountsend.setCreatedUser(request.getEmail());
@@ -198,6 +216,47 @@ public class AccountCtrl {
     public String updateaccount(@RequestBody UpdateAccountRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
        return accountSevice.updateAccount(request);
     }
+    @GetMapping("/checktoken")
+    @ResponseStatus(HttpStatus.OK)
+    public GetAccountDto checktoken() throws NotFoundException {
+
+       if(ThreadContext.getCustomUserDetails().getUsername()==null||ThreadContext.getCustomUserDetails().getUsername().isEmpty()){
+           throw new NotFoundException();
+       }
+        System.out.println(ThreadContext.getCustomUserDetails().getUsername());
+        Optional<Account> account =accountRepo.findByUsername(ThreadContext.getCustomUserDetails().getUsername());
+       if(!account.isPresent()){
+            throw new NotFoundException();
+        }
+        Account accountget = account.get();
+        GetAccountDto getAccountDto=new GetAccountDto();
+        getAccountDto.setName(accountget.getName());
+        getAccountDto.setToken(jwtService.generateToken(ThreadContext.getCustomUserDetails().getUsername()));
+        getAccountDto.setAvatar(accountget.getAvatar());
+        getAccountDto.setUsername(accountget.getUsername());
+        getAccountDto.setPhone(accountget.getPhone());
+        getAccountDto.setId(accountget.getId());
+
+       return getAccountDto;
+    }
+    @PostMapping("/checkEmailRegister")
+    public String checkEmailRigister(@RequestBody CheckCodeRigisterRequest request) throws NotFoundException {
+       Optional<Account> account=accountRepo.findByEmail(request.getEmail());
+       if (!account.isPresent()){
+           throw new NotFoundException();
+
+       }
+       Account accountget=account.get();
+       if(!accountget.getCode().equals(request.getCode())){
+           throw new DuplicateKeyException("code fail");
+       }
+       return "Success";
+
+    }
+
+
+
+
 
 
 

@@ -95,7 +95,7 @@ public class AccountSeviceImpl implements AccountSevice {
         }
         Account accountget=account.get();
         PropertyUtils.copyProperties(accountget,request);
-        accountget.setModifiedDate(LocalDateTime.now());
+//        accountget.setModifiedDate(LocalDateTime.now());
         accountget.setModifiedUser(ThreadContext.getCustomUserDetails().getUsername());
         accountRepo.save(accountget);
         return "Success";

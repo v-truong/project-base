@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateCategoryRequest {
-    private String Name;
+    private String name;
+    private String technicalId;
 }

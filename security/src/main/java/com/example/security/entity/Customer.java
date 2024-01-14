@@ -21,19 +21,14 @@ import java.util.List;
 @Table(name ="customer")
 public class Customer extends EntityBase {
 
-    @Column(name = "customer_id")
-    private String CustomerId;
+    @Column(name = "fullname")
+    private String fullname;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "username")
-    private String username;
     @Column(name = "email")
     private String email;
     @Column(name = "phone")
-    private String Phone;
+    private String phone;
     @Column(name = "account_id")
-    private String AccountId;
+    private String accountId;
 
 }

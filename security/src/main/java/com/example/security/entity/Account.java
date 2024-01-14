@@ -3,12 +3,15 @@ package com.example.security.entity;
 import com.example.common.entity.EntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -29,7 +32,7 @@ public class Account extends EntityBase{
   @Column(name = "email")
   private String email;
   @Column(name = "phone")
-  private String Phone;
+  private String phone;
 
   @Column(name = "roles")
   private String roles;
@@ -40,4 +43,19 @@ public class Account extends EntityBase{
   private Integer code;
   @Column(name = "avartar")
   private String avatar;
+  @PrePersist
+  protected void onCreate() {
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    String formattedNow = now.format(formatter);
+    setCreatedDate(formattedNow);
+    setModifiedDate(formattedNow);
+  }
+  @PreUpdate
+  protected void onUpdate() {
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    String formattedNow = now.format(formatter);
+    setModifiedDate(formattedNow);
+  }
 }

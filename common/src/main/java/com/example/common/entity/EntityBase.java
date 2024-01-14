@@ -37,15 +37,15 @@ public abstract class EntityBase {
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
   // @Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date-time.Pattern.message}")
-  @CreatedDate
-  @Column(name = "created_date", updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
-  private LocalDateTime createdDate;
+
+  @Column(name = "created_date", updatable = false, nullable = false)
+  private String createdDate;
   @LastModifiedDate
-  @Column(name = "modified_date", columnDefinition = "TIMESTAMP")
-  private LocalDateTime modifiedDate;
+  @Column(name = "modified_date")
+  private String modifiedDate;
   
   
-  @CreatedBy
+//  @CreatedBy
   @Column(name = "created_user", updatable = false, nullable = false)
   private String createdUser;
 
