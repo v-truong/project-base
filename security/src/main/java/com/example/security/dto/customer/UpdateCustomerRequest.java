@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateCustomerRequest {
     String customerId;
-    String name;
+    String fullname;
     String username;
     String email;
     String phone;

@@ -24,7 +24,7 @@ public class CustomerImpl implements CustomerService {
 
     @Override
     public List<Customer> getList(int isDelete) {
-        if(ThreadContext.getCustomUserDetails().getRole()!=Constants.ROLE_SALESPERSON){
+        if(!ThreadContext.getCustomUserDetails().getRole().equals(Constants.ROLE_SALESPERSON)){
             throw new AccessDeniedException("api.error.API-008");
         }
         return customerRepo.findAllByIsDelete(isDelete);
@@ -39,7 +39,7 @@ public class CustomerImpl implements CustomerService {
 
     @Override
     public String create(CreateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
-        if(request.getName().isEmpty() || request.getEmail().isEmpty() || request.getPhone().isEmpty()){
+        if(request.getFullname() == null  || request.getEmail() == null || request.getPhone() == null ){
             throw new NotFoundException();
         }
         Customer customer = new Customer();

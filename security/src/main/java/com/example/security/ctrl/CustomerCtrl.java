@@ -18,9 +18,9 @@ public class CustomerCtrl {
     @Autowired
     CustomerService customerService;
 
-    @GetMapping("/getDetail/{cid}")
-    public Customer getDetail(@PathVariable String CustomerId){
-        return customerService.getById(CustomerId);
+    @PostMapping("/getDetailById")
+    public Customer getDetail(@RequestBody Customer request){
+        return customerService.getById(request.getId());
     }
     @GetMapping("/getDetail")
     public List<Customer> getDetail(){

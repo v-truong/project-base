@@ -29,9 +29,11 @@ public class CustomerAddressImpl implements CustomerAddressService {
 
     @Override
     public String Create(CreateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
-        if(request.getProvinceId().isEmpty() || request.getDistrictId().isEmpty() || request.getWardId().isEmpty()){
+
+        if(request.getProvinceCode() == null || request.getDistrictCode() == null  || request.getWardCode() == null ){
             throw new NotFoundException();
         }
+
         CustomerAddress address = new CustomerAddress();
         PropertyUtils.copyProperties(address,request);
         customerAddressRepo.save(address);
