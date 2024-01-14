@@ -31,10 +31,10 @@ public class CategoryImpl implements CategoryService {
 
     @Override
     public String create(CreateCategoryRequest request) {
-        if (ThreadContext.getCustomUserDetails().getRole()!=Constants.ROLE_SALESPERSON){
+        if (!ThreadContext.getCustomUserDetails().getRole().equals(Constants.ROLE_SALESPERSON)){
             throw new AccessDeniedException("api.error.API-008");
         }
-        if(request.getTechnicalId()!=null||!request.getTechnicalId().isEmpty()){
+        if(request.getTechnicalId()!=null){
             Optional<Technical> technical =technicalRepo.findById(request.getTechnicalId());
             if(!technical.isPresent()){
                 throw new DuplicateKeyException("TechnicalId not fount");
@@ -60,7 +60,7 @@ public class CategoryImpl implements CategoryService {
         category.setCreatedUser(ThreadContext.getCustomUserDetails().getUsername());
         category.setName(request.getName());
         categoryRepo.save(category);
-        return null;
+        return "Success";
     }
 
     @Override

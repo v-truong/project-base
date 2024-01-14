@@ -41,7 +41,7 @@ public class CustomUserDetails implements UserDetails {
         authorities= Arrays.stream(account.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        User user=new User(account.getId(),account.getName(),account.getRoles(),account.getUsername());
+        User user=new User(account.getId(),account.getUsername(),account.getName(),account.getRoles());
        ThreadContext.setCurrentuser(user);
 
      }

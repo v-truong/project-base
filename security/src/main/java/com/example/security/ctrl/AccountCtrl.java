@@ -65,7 +65,7 @@ public class AccountCtrl {
    @PostMapping("/sendcodeEmail")
    public String sendCodeEmail(@RequestBody SendCodeRequest request){
        Optional<Account> account =accountRepo.findByEmail(request.getEmail());
-      if(account.isPresent()||account.get().isEnabled()==false){
+      if(account.isPresent()&&account.get().isEnabled()==false){
         Account accountget=account.get();
         LocalDateTime now = LocalDateTime.now();
           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -79,7 +79,7 @@ public class AccountCtrl {
           publisher.publishEvent(new SendcodeEmailEven(accountget));
           return "Success";
       }
-       if(account.isPresent()||account.get().isEnabled()==true){
+       if(account.isPresent()&&account.get().isEnabled()==true){
            throw new DuplicateKeyException("email has been registered");
        }
 
@@ -218,11 +218,26 @@ public class AccountCtrl {
     }
     @GetMapping("/checktoken")
     @ResponseStatus(HttpStatus.OK)
-    public String checktoken() throws NotFoundException {
+    public GetAccountDto checktoken() throws NotFoundException {
+
        if(ThreadContext.getCustomUserDetails().getUsername()==null||ThreadContext.getCustomUserDetails().getUsername().isEmpty()){
            throw new NotFoundException();
        }
-       return "Success";
+        System.out.println(ThreadContext.getCustomUserDetails().getUsername());
+        Optional<Account> account =accountRepo.findByUsername(ThreadContext.getCustomUserDetails().getUsername());
+       if(!account.isPresent()){
+            throw new NotFoundException();
+        }
+        Account accountget = account.get();
+        GetAccountDto getAccountDto=new GetAccountDto();
+        getAccountDto.setName(accountget.getName());
+        getAccountDto.setToken(jwtService.generateToken(ThreadContext.getCustomUserDetails().getUsername()));
+        getAccountDto.setAvatar(accountget.getAvatar());
+        getAccountDto.setUsername(accountget.getUsername());
+        getAccountDto.setPhone(accountget.getPhone());
+        getAccountDto.setId(accountget.getId());
+
+       return getAccountDto;
     }
     @PostMapping("/checkEmailRegister")
     public String checkEmailRigister(@RequestBody CheckCodeRigisterRequest request) throws NotFoundException {

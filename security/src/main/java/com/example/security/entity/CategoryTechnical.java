@@ -17,4 +17,5 @@ public class CategoryTechnical extends EntityBase {
     private String categoryId;
     private String technicalId;
 
+
 }

@@ -31,6 +31,8 @@ public class BrandImpl implements BrandService {
     }
     @Override
     public String create(CreateBandRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        System.out.println(ThreadContext.getCustomUserDetails().getRole());
+        System.out.println(Constants.ROLE_SALESPERSON);
            if(!ThreadContext.getCustomUserDetails().getRole().equals(Constants.ROLE_SALESPERSON)){
                throw new AccessDeniedException("api.error.API-008");
            }
