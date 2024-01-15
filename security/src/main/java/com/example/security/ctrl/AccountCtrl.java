@@ -91,7 +91,7 @@ public class AccountCtrl {
 
        return "Success";
     }
-    @PostMapping("/sendcodeEmailfogot")
+    @PostMapping("/sendCodeEmailForgot")
     public String sendCodeEmailForgot(@RequestBody FogotSendmaillRequest request) throws NotFoundException {
         Optional<Account> account =accountRepo.findByUsername(request.getUsername());
         if(!account.isPresent()){
@@ -136,6 +136,7 @@ public class AccountCtrl {
            getAccountDto.setUsername(accountget.getUsername());
            getAccountDto.setPhone(accountget.getPhone());
            getAccountDto.setId(accountget.getId());
+
 
            return getAccountDto;
        } else {
@@ -216,7 +217,7 @@ public class AccountCtrl {
     public String updateaccount(@RequestBody UpdateAccountRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
        return accountSevice.updateAccount(request);
     }
-    @GetMapping("/checktoken")
+    @GetMapping("/checkToken")
     @ResponseStatus(HttpStatus.OK)
     public GetAccountDto checktoken() throws NotFoundException {
 

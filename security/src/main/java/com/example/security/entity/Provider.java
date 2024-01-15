@@ -1,5 +1,6 @@
 package com.example.security.entity;
 
+import com.example.common.entity.BaseStoreEntity;
 import com.example.common.entity.EntityBase;
 
 import jakarta.persistence.Entity;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor 
-public class Provider extends EntityBase {
+public class Provider extends BaseStoreEntity {
     private String name;
     
 

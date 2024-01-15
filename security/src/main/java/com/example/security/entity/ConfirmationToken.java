@@ -26,7 +26,4 @@ public class ConfirmationToken extends EntityBase {
     @Column(name = "account")
     private String  account;
 
-    
-
-
 }

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,6 +18,4 @@ import lombok.Setter;
 public class CategoryTechnical extends EntityBase {
     private String categoryId;
     private String technicalId;
-
-
 }

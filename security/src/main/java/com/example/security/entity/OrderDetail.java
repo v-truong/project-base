@@ -1,5 +1,6 @@
 package com.example.security.entity;
 
+import com.example.common.entity.BaseStoreEntity;
 import com.example.common.entity.EntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class OrderDetail extends EntityBase {
+public class OrderDetail extends BaseStoreEntity {
     @Column(name = "oder_id")
     private String orderId;
     @Column(name = "productId")

@@ -1,5 +1,6 @@
 package com.example.security.entity;
 
+import com.example.common.entity.BaseStoreEntity;
 import com.example.common.entity.EntityBase;
 
 import jakarta.persistence.Column;
@@ -14,7 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product extends EntityBase{
+public class Product extends BaseStoreEntity {
     @Column(name = "name")
     private String name;
     // @Column(name = "price")
