@@ -1,5 +1,6 @@
 package com.example.security.entity;
 
+import com.example.common.entity.BaseStoreEntity;
 import com.example.common.entity.EntityBase;
 import com.example.common.model.ThreadContext;
 import jakarta.persistence.*;
@@ -19,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name ="customer")
-public class Customer extends EntityBase {
+public class Customer extends BaseStoreEntity {
 
     @Column(name = "fullname")
     private String fullname;

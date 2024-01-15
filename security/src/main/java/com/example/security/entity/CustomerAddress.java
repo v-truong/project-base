@@ -18,6 +18,8 @@ import java.time.format.DateTimeFormatter;
 @Entity
 @Table(name ="customer_address")
 public class CustomerAddress extends EntityBase {
+    @Column(name = "address_id")
+    private String addressId;
     @Column(name = "customer_id")
     private String customerId;
     @Column(name = "province_code")

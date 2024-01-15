@@ -12,6 +12,7 @@ import lombok.Setter;
 public class CreateCustomerRequest {
     String accountId;
     String customerId;
+    String storeId;
     String fullname;
     String username;
     String email;

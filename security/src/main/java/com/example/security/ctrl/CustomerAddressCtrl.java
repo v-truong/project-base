@@ -2,13 +2,23 @@ package com.example.security.ctrl;
 
 
 import com.example.common.config.Constants;
+import com.example.common.config.enums.SortOrderEnum;
+import com.example.common.response.PageResponse;
+import com.example.common.util.SearchUtil;
 import com.example.security.dto.customer.CreateAddressRequest;
+import com.example.security.dto.customer.SearchAddressRequest;
+import com.example.security.dto.customer.SearchCustomerRequest;
 import com.example.security.dto.customer.UpdateAddressRequest;
 import com.example.security.entity.Customer;
 import com.example.security.entity.CustomerAddress;
 import com.example.security.service.CustomerAddressService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,8 +31,13 @@ public class CustomerAddressCtrl {
     CustomerAddressService customerAddressService;
 
     @PostMapping("/filter")
-    public List<CustomerAddress> getDetail(@RequestBody Customer request){
-        return customerAddressService.GetDetail(request.getId(),Constants.ISDELETE_TRUE);
+    public PageResponse<CustomerAddress> getDetail(@RequestParam(required = false) String filter, @Valid @RequestBody SearchAddressRequest searchRequest,
+                                           @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer page,
+                                           @Positive @RequestParam(required = false) Integer size, @RequestParam(required = false) String sort,
+                                           @RequestParam(required = false) SortOrderEnum order){
+        Pageable pageable = SearchUtil.getPageableFromParam(page, size, sort, order);
+        Page<CustomerAddress> pageData = customerAddressService.GetDetail(filter, searchRequest, pageable,searchRequest.getCustomerId(),Constants.ISDELETE_TRUE);
+        return new PageResponse(pageData);
     }
     @PostMapping("/update")
     public String updateAddress(@RequestBody UpdateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {

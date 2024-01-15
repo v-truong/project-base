@@ -1,15 +1,19 @@
 package com.example.security.service;
 
 import com.example.security.dto.customer.CreateAddressRequest;
+import com.example.security.dto.customer.SearchAddressRequest;
+import com.example.security.dto.customer.SearchCustomerRequest;
 import com.example.security.dto.customer.UpdateAddressRequest;
 import com.example.security.entity.CustomerAddress;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface CustomerAddressService {
-    List<CustomerAddress> GetDetail(String CustomerId,int isDelete);
+    Page<CustomerAddress> GetDetail(String filter, SearchAddressRequest searchAddressRequest, Pageable pageable, String CustomerId, int isDelete);
 
     String Create(CreateAddressRequest address) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ChangeSetPersister.NotFoundException;
 
