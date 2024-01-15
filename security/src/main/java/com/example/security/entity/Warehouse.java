@@ -1,5 +1,6 @@
 package com.example.security.entity;
 
+import com.example.common.entity.BaseStoreEntity;
 import com.example.common.entity.EntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,8 +16,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="warehouse")
-public class Warehouse extends EntityBase {
+public class Warehouse extends BaseStoreEntity {
     @Column(name="name")
     private String name;
+    @Column(name = "quantity")
+    private String quantity;
+    private String pCode;
+    private String vcode;
+
+
 
 }

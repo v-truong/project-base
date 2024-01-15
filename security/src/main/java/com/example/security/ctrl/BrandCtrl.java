@@ -22,8 +22,8 @@ public class BrandCtrl {
     public  String create(@RequestBody CreateBandRequest request) throws ChangeSetPersister.NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         return brandService.create(request);
     }
-    @PostMapping("delete")
-    public String detete(List<String> ids){
+    @PostMapping("/elete")
+    public String detete(@RequestBody List<String> ids){
         return brandService.deleteAllListById(ids);
     }
 }

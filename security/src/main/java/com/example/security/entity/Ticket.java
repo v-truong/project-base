@@ -1,5 +1,6 @@
 package com.example.security.entity;
 
+import com.example.common.entity.BaseStoreEntity;
 import com.example.common.entity.EntityBase;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,6 +15,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ticket extends EntityBase {
+public class Ticket extends BaseStoreEntity {
     private String name;
 }
