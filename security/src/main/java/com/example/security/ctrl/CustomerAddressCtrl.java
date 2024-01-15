@@ -20,19 +20,19 @@ public class CustomerAddressCtrl {
     @Autowired private
     CustomerAddressService customerAddressService;
 
-    @PostMapping("/getDetail")
+    @PostMapping("/filter")
     public List<CustomerAddress> getDetail(@RequestBody Customer request){
         return customerAddressService.GetDetail(request.getId(),Constants.ISDELETE_TRUE);
     }
-    @PostMapping("/updateAddress")
+    @PostMapping("/update")
     public String updateAddress(@RequestBody UpdateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
         return customerAddressService.Edit(request);
     }
-    @PostMapping("/createAddress")
+    @PostMapping("/create")
     public String createAddress(@RequestBody CreateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
         return customerAddressService.Create(request);
     }
-    @PostMapping("/deleteAddress")
+    @PostMapping("/delete")
     public String createAddress(List<String> request){
         return customerAddressService.Delete(request);
     }

@@ -18,23 +18,23 @@ public class CustomerCtrl {
     @Autowired
     CustomerService customerService;
 
-    @PostMapping("/getDetailById")
+    @PostMapping("/detail")
     public Customer getDetail(@RequestBody Customer request){
         return customerService.getById(request.getId());
     }
-    @GetMapping("/getDetail")
+    @GetMapping("/filter")
     public List<Customer> getDetail(){
         return customerService.getList(Constants.ISDELETE_TRUE);
     }
-    @PostMapping("/updateCustomer")
+    @PostMapping("/update")
     public String updateAddress(@RequestBody UpdateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
         return customerService.edit(request);
     }
-    @PostMapping("/createCustomer")
+    @PostMapping("/create")
     public String createAddress(@RequestBody CreateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
         return customerService.create(request);
     }
-    @PostMapping("/deleteCustomer")
+    @PostMapping("/delete")
     public String createAddress(List<String> request){
         return customerService.delete(request);
     }
