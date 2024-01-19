@@ -12,4 +12,6 @@ import java.util.List;
 public class CreateCategoryRequest {
     private String name;
     private List<String> technicalId;
+    private String storeId;
+    private String parentId;
 }

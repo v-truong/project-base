@@ -3,8 +3,10 @@ package com.example.security.service.Implement;
 import com.example.common.config.Constants;
 import com.example.common.model.ThreadContext;
 import com.example.security.dto.brand.CreateBandRequest;
+import com.example.security.dto.brand.UpdateBrandRequest;
 import com.example.security.entity.Brand;
 import com.example.security.entity.Product;
+import com.example.security.entity.Technical;
 import com.example.security.repo.BrandRepo;
 import com.example.security.service.BrandService;
 import com.sun.jdi.request.DuplicateRequestException;
@@ -18,7 +20,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,16 +54,39 @@ public class BrandImpl implements BrandService {
     }
 
     @Override
-    public String deleteAllListById(List<String> Ids) {
+    public List<Brand> deleteAllListById(List<String> ids) {
         if(!Constants.ROLE_SALESPERSON.equals(ThreadContext.getCustomUserDetails().getRole())){
-            throw new DuplicateKeyException("ko co quyen try cap");
+            throw new AccessDeniedException("ko co quyen try cap");
         }
-        List<Brand> brands=brandRepo.findAllById(Ids);
-        for (Brand brand: brands) {
-            brand.setIsDelete(Constants.ISDELETE_FALSE);
+        List<Brand> lstBrand=new ArrayList<>();
+        List<Brand> brands=brandRepo.findAllById(ids);
+        Map<String, Brand> brandMapMaps = brands.stream().collect(Collectors.toMap(Brand::getId, Function.identity()));
+        for (String brand: ids) {
+            Brand brandFor=brandMapMaps.get(brand);
+            if(brandFor==null){
+            throw new DuplicateKeyException(brand+":  khong ton tai");
+            }
+            brandFor.setIsDelete(Constants.ISDELETE_FALSE);
+            lstBrand.add(brandFor);
         }
-        brandRepo.saveAll(brands);
-        return "success";
+        brandRepo.saveAll(lstBrand);
+        return brands;
+    }
+
+    @Override
+    public Brand update(String id, UpdateBrandRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        if(!ThreadContext.getCustomUserDetails().getRole().equals(Constants.ROLE_SALESPERSON)){
+            throw new AccessDeniedException("khon co quyen truy cap");
+        }
+        Optional<Brand> brandOptional=brandRepo.findById(id);
+        if (!brandOptional.isPresent()){
+            throw new DuplicateKeyException("id brand Not fount");
+        }
+        Brand brandget=brandOptional.get();
+        PropertyUtils.copyProperties(brandget,request);
+
+
+        return brandRepo.save(brandget);
     }
 
 

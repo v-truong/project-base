@@ -23,11 +23,7 @@ public class Product extends BaseStoreEntity {
     @Column(name="description")
     private String description;
     @Column(name="category_Id")
-    private String categoryId;
+    private String categoryId;//người mua lấy ra theo category null
     @Column(name="brand_id")
     private  String brandId;
-
-    
-
-    
 }

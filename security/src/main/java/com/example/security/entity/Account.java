@@ -43,6 +43,9 @@ public class Account extends EntityBase{
   private Integer code;
   @Column(name = "avartar")
   private String avatar;
+  @Column(name = "time_live_code")
+  private String timeLiveCode;
+  private String token;
   @PrePersist
   protected void onCreate() {
     LocalDateTime now = LocalDateTime.now();

@@ -17,7 +17,7 @@ public class CategoryCtrl {
     public List<Category> getall(){
        return categoryService.getall();
     }
-    @PostMapping("create")
+    @PostMapping("/create")
     public String create(@RequestBody CreateCategoryRequest request){
         return categoryService.create(request);
     }

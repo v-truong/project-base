@@ -14,5 +14,7 @@ public interface TechnicalRepo extends JpaRepository<Technical,String>{
 
      List<Technical> findAllByIsDelete(Integer isDelete);
      Optional<Technical> findByName(String name);
+//     List<String> findAllIds();
+     List<Technical> findByIdIn(List<String> Ids);
     
 }

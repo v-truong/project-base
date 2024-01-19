@@ -1,5 +1,6 @@
 package com.example.security.ctrl;
 
+import com.example.common.config.Constants;
 import com.example.common.model.ThreadContext;
 import com.example.security.dto.AuthRequest;
 import com.example.security.dto.account.*;
@@ -32,9 +33,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
-
-
-
+import java.util.UUID;
 
 
 @RestController
@@ -69,10 +68,10 @@ public class AccountCtrl {
         Account accountget=account.get();
         LocalDateTime now = LocalDateTime.now();
           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-          LocalDateTime inputTime = LocalDateTime.parse(accountget.getModifiedDate(), formatter);
+          LocalDateTime inputTime = LocalDateTime.parse(accountget.getTimeLiveCode(), formatter);
           long seconds = ChronoUnit.SECONDS.between(inputTime, now);
           long timeSenTo = 90;
-          if(seconds<=timeSenTo){
+          if(seconds<=Constants.TIME_lIVE_CODE){
               Long timeremaining=timeSenTo-seconds;
               return "There is still time to resend the email:  "+timeremaining;
           }
@@ -86,6 +85,10 @@ public class AccountCtrl {
        Account accountsend=new Account();
        accountsend.setEmail(request.getEmail());
        accountsend.setCreatedUser(request.getEmail());
+       LocalDateTime now = LocalDateTime.now();
+       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+       String formattedNow = now.format(formatter);
+       accountsend.setTimeLiveCode(formattedNow);
        accountRepo.save(accountsend);
        publisher.publishEvent(new SendcodeEmailEven(accountsend));
 
@@ -170,11 +173,6 @@ public class AccountCtrl {
         return "ok";
     }
 
-    @PostMapping("/registers")
-    @ResponseStatus(HttpStatus.OK)
-    public String registers(){
-           return "ok";
-    }
     @GetMapping("/verifyEmail")
     public String verifyEmail(@RequestParam("token") String token) throws NotFoundException{
         
@@ -247,11 +245,20 @@ public class AccountCtrl {
            throw new NotFoundException();
 
        }
+
        Account accountget=account.get();
-       if(!accountget.getCode().equals(request.getCode())){
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        LocalDateTime inputTime = LocalDateTime.parse(accountget.getTimeLiveCode(), formatter);
+        long seconds = ChronoUnit.SECONDS.between(inputTime, now);
+
+       if(!accountget.getCode().equals(request.getCode())&&seconds<= Constants.TIME_lIVE_CODE){
            throw new DuplicateKeyException("code fail");
        }
-       return "Success";
+       String verificationToken = UUID.randomUUID().toString();
+       accountget.setToken(verificationToken);
+       accountRepo.save(accountget);
+       return verificationToken;
 
     }
 
