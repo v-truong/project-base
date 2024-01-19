@@ -2,6 +2,7 @@ package com.example.security.entity;
 
 import com.example.common.entity.BaseStoreEntity;
 import com.example.common.entity.EntityBase;
+import com.example.common.model.ThreadContext;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Brand extends BaseStoreEntity {
         String formattedNow = now.format(formatter);
         setCreatedDate(formattedNow);
         setModifiedDate(formattedNow);
+        setCreatedUser(ThreadContext.getCustomUserDetails().getUsername());
     }
     @PreUpdate
     protected void onUpdate() {
@@ -37,7 +39,6 @@ public class Brand extends BaseStoreEntity {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String formattedNow = now.format(formatter);
         setModifiedDate(formattedNow);
+        setModifiedUser(ThreadContext.getCustomUserDetails().getUsername());
     }
-
-
 }

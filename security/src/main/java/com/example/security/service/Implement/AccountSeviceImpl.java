@@ -39,7 +39,7 @@ public class AccountSeviceImpl implements AccountSevice {
             throw new  NotFoundException();
         }
         Account accountget=accountMail.get();
-        if (!accountget.getCode().equals(createaccount.getCode())){
+        if (!accountget.getToken().equals(createaccount.getToken())){
             throw new DuplicateKeyException("invalid code");
         }
         PropertyUtils.copyProperties(accountget, createaccount);

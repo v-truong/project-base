@@ -16,4 +16,14 @@ public interface Constants {
     public  static  final String ROLE_ADMIN="0";
     public  static  final String ROLE_SALESPERSON="1";
     public  static  final String ROLE_BUYER="2";
+    public static final long TIME_lIVE_CODE=180;
+    public static  final long TIME_SEND_CODE=90;
+    public static final int STATUS_STORE_ACTIVE=1;
+    public static final int STATUS_STORE_DEACTIVE=0;
+    public static  final String TYPE_STORE_ALL ="all";
+    public static  final String TYPE_STORE_CREATED ="created";
+    public static  final String TYPE_STORE_JOINED ="joined";
+    public static  final String TYPE_STORE_DELETED ="deleted";
+
+
 }

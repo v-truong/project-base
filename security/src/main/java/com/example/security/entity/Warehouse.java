@@ -17,13 +17,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name="warehouse")
 public class Warehouse extends BaseStoreEntity {
-    @Column(name="name")
+    @Column(name="name", updatable = true, nullable = false)
     private String name;
-    @Column(name = "quantity")
-    private String quantity;
-    private String pCode;
-    private String vcode;
-
-
+    @Column(name="p_code", updatable = true, nullable = false)
+    private String pCode;//mã tỉnh thành
+    @Column(name="d_code", updatable = true, nullable = false)
+    private String dCode;//mã quạn huyện
+    @Column(name="W_code", updatable = true, nullable = false)
+    private String wCode;//mã Phường xã
+    @Column(name="detail_address", updatable = true, nullable = false)
+    private String detailAddress;//dịa chỉ cụ thể số nhà vvvvv
+    @Column(name="phone", updatable = true, nullable = false)
+    private String phone;//só dt quan ly kho
 
 }

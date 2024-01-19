@@ -37,8 +37,6 @@ public class ProductCtrl {
                                                @RequestParam(required = false) SortOrderEnum order){
         Pageable pageable = SearchUtil.getPageableFromParam(page, size, sort, order);
         Page<Product> pageData = productService.advanceSearch(filter, searchRequest, pageable);
-        return new PageResponse<Product>(pageData);
+        return new PageResponse<>(pageData);
     }
-    
-    
 }
