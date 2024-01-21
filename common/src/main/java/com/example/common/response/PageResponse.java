@@ -1,17 +1,17 @@
 package com.example.common.response;
 
 import com.example.common.dto.response.SuccessResponse;
+import com.example.common.entity.EntityBase;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public class PageResponse<T> extends SuccessResponse {
+public class PageResponse<T, A extends EntityBase> extends SuccessResponse {
     private Page<T> page;
 
     public PageResponse(Page<T> page) {
         this.page = page;
     }
-
     public int getNumber() {
         return page.getNumber();
     }

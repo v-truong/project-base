@@ -1,7 +1,10 @@
 package com.example.security.ctrl;
 
 import com.example.common.config.Constants;
+import com.example.common.config.enums.SortOrderEnum;
 import com.example.common.model.ThreadContext;
+import com.example.common.response.PageResponse;
+import com.example.common.util.SearchUtil;
 import com.example.security.dto.AuthRequest;
 import com.example.security.dto.account.*;
 import com.example.security.entity.Account;
@@ -10,12 +13,18 @@ import com.example.security.event.SendcodeEmailEven;
 import com.example.security.repo.AccountRepo;
 import com.example.security.service.AccountSevice;
 import com.example.security.service.JwtService;
+import it.avutils.jmapper.JMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,6 +59,7 @@ public class AccountCtrl {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired private AccountRepo accountRepo;
+    private JMapper<GetAccountFilterDto,Account> mapper=new JMapper<>(GetAccountFilterDto.class,Account.class);
 
 
    @GetMapping()
@@ -261,6 +271,16 @@ public class AccountCtrl {
        return verificationToken;
 
     }
+//    @PostMapping(value = "/search")
+//    @ResponseStatus(HttpStatus.OK)
+//    public PageResponse<GetAccountFilterDto,Account> advanceSearch(@RequestParam(required = false) String filter, @Valid @RequestBody SearchAccountRequetst searchAccountRequetst,
+//                                               @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer page,
+//                                               @Positive @RequestParam(required = false) Integer size, @RequestParam(required = false) String sort,
+//                                               @RequestParam(required = false) SortOrderEnum order){
+//        Pageable pageable = SearchUtil.getPageableFromParam(page, size, sort, order);
+//        Page<Account> pageData = accountSevice.advanceSearch(filter, searchAccountRequetst, pageable);
+//        return new PageResponse<>(pageData,mapper);
+//    }
 
 
 

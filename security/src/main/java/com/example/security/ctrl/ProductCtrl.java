@@ -3,6 +3,7 @@ package com.example.security.ctrl;
 import java.util.List;
 
 import com.example.common.config.enums.SortOrderEnum;
+import com.example.common.entity.EntityBase;
 import com.example.common.response.PageResponse;
 import com.example.common.util.SearchUtil;
 import com.example.security.dto.product.SearchProductRequest;
@@ -31,10 +32,10 @@ public class ProductCtrl {
     }
     @PostMapping(value = "/search")
     @ResponseStatus(HttpStatus.OK)
-    public PageResponse<Product> advanceSearch(@RequestParam(required = false) String filter, @Valid @RequestBody SearchProductRequest searchRequest,
-                                               @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer page,
-                                               @Positive @RequestParam(required = false) Integer size, @RequestParam(required = false) String sort,
-                                               @RequestParam(required = false) SortOrderEnum order){
+    public PageResponse<Product, EntityBase> advanceSearch(@RequestParam(required = false) String filter, @Valid @RequestBody SearchProductRequest searchRequest,
+                                                           @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                           @Positive @RequestParam(required = false) Integer size, @RequestParam(required = false) String sort,
+                                                           @RequestParam(required = false) SortOrderEnum order){
         Pageable pageable = SearchUtil.getPageableFromParam(page, size, sort, order);
         Page<Product> pageData = productService.advanceSearch(filter, searchRequest, pageable);
         return new PageResponse<>(pageData);

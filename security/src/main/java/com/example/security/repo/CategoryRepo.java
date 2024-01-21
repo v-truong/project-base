@@ -11,5 +11,7 @@ import java.util.Optional;
 public  interface CategoryRepo extends JpaRepository<Category,String> {
     List<Category> findAllByIsDelete(int isDelete);
     Optional<Category> findByName(String name);
+    List<Category> findByIdIn(List<String> ids);
+
 
 }
