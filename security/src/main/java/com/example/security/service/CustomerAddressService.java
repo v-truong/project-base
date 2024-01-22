@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface CustomerAddressService {
-    Page<CustomerAddress> GetDetail(String filter, SearchAddressRequest searchAddressRequest, Pageable pageable, String CustomerId, int isDelete);
+    Page<CustomerAddress> GetDetail(String filter, SearchAddressRequest searchAddressRequest,Pageable pageable, int isDelete,String customerId);
 
     String Create(CreateAddressRequest address) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ChangeSetPersister.NotFoundException;
 

@@ -46,7 +46,7 @@ public class CustomerImpl implements CustomerService {
                     spec = spec.and(specList.get(i));
 
                 }
-                return customerRepo.findAllByIsDelete(pageable,specList,isDelete);
+                return customerRepo.findAll(pageable);
             }
         }
         return customerRepo.findAll(pageable);

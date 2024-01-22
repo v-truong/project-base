@@ -31,12 +31,8 @@ public class CustomerAddressCtrl {
     CustomerAddressService customerAddressService;
 
     @PostMapping("/filter")
-    public PageResponse<CustomerAddress> getDetail(@RequestParam(required = false) String filter, @Valid @RequestBody SearchAddressRequest searchRequest,
-                                           @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer page,
-                                           @Positive @RequestParam(required = false) Integer size, @RequestParam(required = false) String sort,
-                                           @RequestParam(required = false) SortOrderEnum order){
-        Pageable pageable = SearchUtil.getPageableFromParam(page, size, sort, order);
-        Page<CustomerAddress> pageData = customerAddressService.GetDetail(filter, searchRequest, pageable,searchRequest.getCustomerId(),Constants.ISDELETE_TRUE);
+    public PageResponse<CustomerAddress> getDetail(@RequestParam(required = false) String filter,@RequestBody SearchAddressRequest searchAddressRequest,Pageable pageable){
+        Page<CustomerAddress> pageData = customerAddressService.GetDetail(filter,searchAddressRequest, pageable,Constants.ISDELETE_TRUE,searchAddressRequest.getCustomerId());
         return new PageResponse(pageData);
     }
     @PostMapping("/update")

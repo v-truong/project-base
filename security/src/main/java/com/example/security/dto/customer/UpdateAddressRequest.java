@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateAddressRequest {String addressId;
+public class UpdateAddressRequest {
+    String addressId;
     String customerId;
     String provinceCode;
     String districtCode;

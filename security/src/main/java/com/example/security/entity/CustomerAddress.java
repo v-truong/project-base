@@ -30,8 +30,12 @@ public class CustomerAddress extends EntityBase {
     private String wardCode;
     @Column(name = "additionInfo")
     private String additionInfo;
-    @Column(name = "receiver")
-    private String receiver;
+    @Column(name = "receiverName")
+    private String receiverName;
+    @Column(name = "receiverPhone")
+    private String receiverPhone;
+    @Column(name = "receiverEmail")
+    private String receiverEmail;
     @Column(name = "full_address")
     private String fullAddress;
     @PrePersist

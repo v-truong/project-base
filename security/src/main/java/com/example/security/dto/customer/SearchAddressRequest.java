@@ -10,12 +10,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchAddressRequest {
-    String addressId;
-    String customerId;
-    String provinceCode;
-    String districtCode;
-    String wardCode;
-    String additionInfo;
-    String receiver;
-    String fullAddress;
+    private String addressId;
+    private String customerId;
+    private String provinceCode;
+    private String districtCode;
+    private String wardCode;
+    private String additionInfo;
+    private String receiver;
+    private String fullAddress;
+    private int isDelete;
 }
