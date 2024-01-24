@@ -19,4 +19,5 @@ public class Technical extends BaseStoreEntity {
     private String name;
     @Column(name = "unit", nullable = false)
     private String unit;
+    private String categoryId;
 }

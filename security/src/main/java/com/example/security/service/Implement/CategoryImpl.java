@@ -3,6 +3,7 @@ package com.example.security.service.Implement;
 import com.example.common.config.Constants;
 import com.example.common.model.ThreadContext;
 import com.example.security.dto.category.CreateCategoryRequest;
+import com.example.security.dto.category.UpdateCategoryRequest;
 import com.example.security.entity.Category;
 import com.example.security.entity.Store;
 import com.example.security.entity.Technical;
@@ -115,6 +116,23 @@ public class CategoryImpl implements CategoryService {
     @Override
     public List<String> findTechnicallCategoryId(String categoryid) {
 
+        return null;
+    }
+
+    @Override
+    public String update(UpdateCategoryRequest request) {
+        Optional<Category> categoryOptional =categoryRepo.findById(request.getId());
+        if(!categoryOptional.isPresent()){
+            throw new DuplicateKeyException(request+"id not fount");
+        }
+        Category categoryget=categoryOptional.get();
+        Optional<Store> storeOptional=storeRepo.findById(categoryget.getStoreId());
+        Store storegget=storeOptional.get();
+//        if
+//
+//        if(ThreadContext.getCustomUserDetails().getId())
+        categoryget.setName(request.getName());
+        categoryget.getParentId();
         return null;
     }
 

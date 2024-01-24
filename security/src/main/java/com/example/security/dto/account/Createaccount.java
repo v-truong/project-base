@@ -27,5 +27,5 @@ public class Createaccount {
     private String password;
     private String roles;
     private String email;
-    private Integer token;
+    private String token;
 }

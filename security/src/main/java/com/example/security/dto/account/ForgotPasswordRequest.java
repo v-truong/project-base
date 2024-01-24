@@ -11,6 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ForgotPasswordRequest {
     private String username;
-    private Integer code;
+    private String token;
+
+    private String password;
 
 }

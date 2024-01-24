@@ -32,11 +32,13 @@ public class ProductCtrl {
     @PostMapping(value = "/search")
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<Product> advanceSearch(@RequestParam(required = false) String filter, @Valid @RequestBody SearchProductRequest searchRequest,
-                                               @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer page,
-                                               @Positive @RequestParam(required = false) Integer size, @RequestParam(required = false) String sort,
-                                               @RequestParam(required = false) SortOrderEnum order){
+                                                  @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                  @Positive @RequestParam(required = false) Integer size, @RequestParam(required = false) String sort,
+                                                  @RequestParam(required = false) SortOrderEnum order){
         Pageable pageable = SearchUtil.getPageableFromParam(page, size, sort, order);
         Page<Product> pageData = productService.advanceSearch(filter, searchRequest, pageable);
+//        pageData.getContent().get(1).setName("trughsrkjgkjfdghng");
+        System.out.println(pageData.getContent().get(1));
         return new PageResponse<>(pageData);
     }
 }

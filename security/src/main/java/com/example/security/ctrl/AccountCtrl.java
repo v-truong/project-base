@@ -1,7 +1,10 @@
 package com.example.security.ctrl;
 
 import com.example.common.config.Constants;
+import com.example.common.config.enums.SortOrderEnum;
 import com.example.common.model.ThreadContext;
+import com.example.common.response.PageResponse;
+import com.example.common.util.SearchUtil;
 import com.example.security.dto.AuthRequest;
 import com.example.security.dto.account.*;
 import com.example.security.entity.Account;
@@ -10,16 +13,23 @@ import com.example.security.event.SendcodeEmailEven;
 import com.example.security.repo.AccountRepo;
 import com.example.security.service.AccountSevice;
 import com.example.security.service.JwtService;
+import it.avutils.jmapper.JMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +60,8 @@ public class AccountCtrl {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired private AccountRepo accountRepo;
+    @Autowired private PasswordEncoder passwordEncoder;
+    private JMapper<GetAccountFilterDto,Account> mapper=new JMapper<>(GetAccountFilterDto.class,Account.class);
 
 
    @GetMapping()
@@ -101,6 +113,11 @@ public class AccountCtrl {
             throw new NotFoundException();
         }
         Account accountsend=account.get();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String formattedNow = now.format(formatter);
+        accountsend.setTimeLiveCode(formattedNow);
+        accountRepo.save(accountsend);
         publisher.publishEvent(new ForgotEven(accountsend));
         return accountsend.getEmail();
     }
@@ -111,10 +128,29 @@ public class AccountCtrl {
             throw new NotFoundException();
         }
         Account accountsend=account.get();
-        if (!request.getCode().equals(accountsend.getCode())){
-            throw new DuplicateKeyException("code fall");
+        if (!request.getToken().equals(accountsend.getToken())){
+            throw new DuplicateKeyException("token fall");
         }
+
        return "Success";
+    }
+    @PostMapping("/checkCodeFogot")
+    public String checkCodeFogot(@RequestBody CheckCodeFogotRequest request){
+       Optional<Account> accountOptional =accountRepo.findByUsername(request.getUsername());
+       if(!accountOptional.isPresent()){
+           throw new  DuplicateKeyException(request.getUsername()+"not fount");
+       }
+        Account accountget=accountOptional.get();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        LocalDateTime inputTime = LocalDateTime.parse(accountget.getTimeLiveCode(), formatter);
+        long seconds = ChronoUnit.SECONDS.between(inputTime, now);
+        if(!accountget.getCode().equals(request.getCode())&&seconds<= Constants.TIME_lIVE_CODE){
+            throw new DuplicateKeyException("code fail");
+        }
+        String verificationToken = UUID.randomUUID().toString();
+        accountget.setToken(verificationToken);
+       return verificationToken;
     }
 
 
@@ -164,10 +200,11 @@ public class AccountCtrl {
             throw new NotFoundException();
         }
         Account accountget = account.get();
-        if (!accountget.getCode().equals(request.getCode())) {
+        if (!accountget.getToken().equals(request.getToken())) {
             throw new NotFoundException();
         }
         PropertyUtils.copyProperties(accountget,request);
+        accountget.setPassword(passwordEncoder.encode(accountget.getPassword()));
         accountRepo.save(accountget);
 
         return "ok";
@@ -246,7 +283,7 @@ public class AccountCtrl {
 
        }
 
-       Account accountget=account.get();
+        Account accountget=account.get();
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime inputTime = LocalDateTime.parse(accountget.getTimeLiveCode(), formatter);
@@ -261,7 +298,23 @@ public class AccountCtrl {
        return verificationToken;
 
     }
-
+    @PostMapping(value = "/search")
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<Account> advanceSearch (@RequestParam(required = false) String filter, @Valid @RequestBody SearchAccountRequetst searchAccountRequetst,
+                                          @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer page,
+                                          @Positive @RequestParam(required = false) Integer size, @RequestParam(required = false) String sort,
+                                          @RequestParam(required = false) SortOrderEnum order){
+        Pageable pageable = SearchUtil.getPageableFromParam(page, size, sort, order);
+        Page<Account> pageData = accountSevice.advanceSearch(filter, searchAccountRequetst, pageable);
+        for(int i=0;i<pageData.getContent().size();i++){
+        System.out.println(pageData.getContent().size());
+        pageData.getContent().get(i).setPassword("");
+            pageData.getContent().get(i).setToken("");
+            pageData.getContent().get(i).setPassword("");
+        }
+//        System.out.println(pageData.getContent());
+        return new PageResponse<>(pageData);
+    }
 
 
 
