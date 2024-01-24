@@ -7,12 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class CreateCustomerRequest {
-    String accountId;
+@AllArgsConstructor
+public class SearchCustomerRequest {
     String customerId;
-    String storeId;
     String fullname;
     String username;
     String email;

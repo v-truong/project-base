@@ -2,7 +2,10 @@ package com.example.security.service.Implement;
 
 import com.example.common.config.Constants;
 import com.example.common.model.ThreadContext;
+import com.example.common.util.SearchUtil;
 import com.example.security.dto.customer.CreateAddressRequest;
+import com.example.security.dto.customer.SearchAddressRequest;
+import com.example.security.dto.customer.SearchCustomerRequest;
 import com.example.security.dto.customer.UpdateAddressRequest;
 import com.example.security.entity.Customer;
 import com.example.security.entity.CustomerAddress;
@@ -10,10 +13,15 @@ import com.example.security.repo.CustomerAddressRepo;
 import com.example.security.service.CustomerAddressService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,16 +31,55 @@ public class CustomerAddressImpl implements CustomerAddressService {
     private  CustomerAddressRepo customerAddressRepo;
 
     @Override
-    public List<CustomerAddress> GetDetail(String CustomerId,int isDelete) {
-        List<CustomerAddress> Addresses = customerAddressRepo.findAllByCustomerIdAndIsDelete(CustomerId,isDelete);
-        return Addresses;
+    public Page<CustomerAddress> GetDetail(String filter, SearchAddressRequest searchAddressRequest,Pageable pageable, int isDelete,String customerId) {
+        if (searchAddressRequest != null) {
+            List<Specification<CustomerAddress>> specList = getAdvanceSearchSpecList(searchAddressRequest);
+            if (filter != null && !filter.isEmpty()) {
+                specList.add(SearchUtil.like("fullTextSearch", "%" + filter + "%"));
+            }
+            if (specList.size() > 0) {
+                Specification<CustomerAddress> spec = specList.get(0);
+                for (int i = 1; i < specList.size(); i++) {
+                    spec = spec.and(specList.get(i));
+
+                }
+                return customerAddressRepo.findAllByCustomerIdAndIsDelete(customerId,isDelete,pageable);
+            }
+        }
+        return customerAddressRepo.findAllByCustomerIdAndIsDelete(customerId,isDelete,pageable);
+    }
+
+    private List<Specification<CustomerAddress>> getAdvanceSearchSpecList(SearchAddressRequest s){
+        List<Specification<CustomerAddress>> speclist=new ArrayList<>();
+        if(s.getCustomerId()!=null && !s.getCustomerId().isEmpty()){
+            speclist.add(SearchUtil.like("customerId","%"+s.getCustomerId()+"%"));
+        }
+        if(s.getFullAddress()!=null && !s.getFullAddress().isEmpty()){
+            speclist.add(SearchUtil.like("fullAddress","%"+s.getFullAddress()+"%"));
+        }
+        if (s.getProvinceCode()!=null && !s.getProvinceCode().isEmpty()){
+            speclist.add(SearchUtil.eq("province",s.getProvinceCode()));
+        }
+        if (s.getDistrictCode()!=null && !s.getDistrictCode().isEmpty()){
+            speclist.add(SearchUtil.eq("district",s.getDistrictCode()));
+        }
+        if (s.getWardCode()!=null && !s.getWardCode().isEmpty()){
+            speclist.add(SearchUtil.eq("ward",s.getWardCode()));
+        }
+        if(s.getIsDelete() == 0){
+            speclist.add(SearchUtil.eq("isDelete",s.getIsDelete()));
+        }
+
+        return  speclist;
     }
 
     @Override
-    public String Create(CreateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        if(request.getProvinceId().isEmpty() || request.getDistrictId().isEmpty() || request.getWardId().isEmpty()){
-            return "Phai dien vao required input";
+    public String Create(CreateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
+
+        if(request.getProvinceCode() == null || request.getDistrictCode() == null  || request.getWardCode() == null ){
+            throw new NotFoundException();
         }
+
         CustomerAddress address = new CustomerAddress();
         PropertyUtils.copyProperties(address,request);
         customerAddressRepo.save(address);
@@ -40,10 +87,10 @@ public class CustomerAddressImpl implements CustomerAddressService {
     }
 
     @Override
-    public String Edit(UpdateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        Optional<CustomerAddress> address = customerAddressRepo.findById(ThreadContext.getCustomUserDetails().getId());
-        if(address.isPresent()){
-            return "khong tim thay address";
+    public String Edit(UpdateAddressRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NotFoundException {
+        Optional<CustomerAddress> address = customerAddressRepo.findById(request.getAddressId());
+        if(!address.isPresent()){
+            throw new NotFoundException();
         }
         CustomerAddress addressGet = address.get();
         PropertyUtils.copyProperties(addressGet,request);

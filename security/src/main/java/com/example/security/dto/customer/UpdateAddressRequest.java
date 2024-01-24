@@ -9,11 +9,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateAddressRequest {String addressId;
+public class UpdateAddressRequest {
+    String addressId;
     String customerId;
-    String proviceId;
-    String districtId;
-    String wardId;
+    String provinceCode;
+    String districtCode;
+    String wardCode;
     String additionInfo;
     String receiver;
     String fullAddress;
