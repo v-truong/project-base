@@ -144,8 +144,6 @@ public class StoreImpl implements StoreService {
             lstStore.add(storeFor);
         }
         storeRepo.saveAll(lstStore);
-
-
-        return null;
+        return "Success";
     }
 }

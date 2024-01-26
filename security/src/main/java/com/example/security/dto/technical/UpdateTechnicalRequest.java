@@ -1,10 +1,13 @@
 package com.example.security.dto.technical;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.NonNull;
+import lombok.*;
 
 import java.util.List;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateTechnicalRequest {
     @NotNull
     private String id;

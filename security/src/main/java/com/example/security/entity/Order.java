@@ -33,4 +33,5 @@ public class Order extends BaseStoreEntity {
     private String recipientName;
     @Column(name = "address")
     private String address;
+    private String status;
 }

@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CheckCodeFogotRequest {
     private String username;
-    private String code;
+    private Integer code;
 }

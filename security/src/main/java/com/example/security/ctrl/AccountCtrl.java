@@ -13,7 +13,6 @@ import com.example.security.event.SendcodeEmailEven;
 import com.example.security.repo.AccountRepo;
 import com.example.security.service.AccountSevice;
 import com.example.security.service.JwtService;
-import it.avutils.jmapper.JMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -61,7 +60,7 @@ public class AccountCtrl {
     private AuthenticationManager authenticationManager;
     @Autowired private AccountRepo accountRepo;
     @Autowired private PasswordEncoder passwordEncoder;
-    private JMapper<GetAccountFilterDto,Account> mapper=new JMapper<>(GetAccountFilterDto.class,Account.class);
+
 
 
    @GetMapping()
@@ -112,11 +111,13 @@ public class AccountCtrl {
         if(!account.isPresent()){
             throw new NotFoundException();
         }
+
         Account accountsend=account.get();
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String formattedNow = now.format(formatter);
         accountsend.setTimeLiveCode(formattedNow);
+
         accountRepo.save(accountsend);
         publisher.publishEvent(new ForgotEven(accountsend));
         return accountsend.getEmail();
@@ -145,11 +146,14 @@ public class AccountCtrl {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime inputTime = LocalDateTime.parse(accountget.getTimeLiveCode(), formatter);
         long seconds = ChronoUnit.SECONDS.between(inputTime, now);
-        if(!accountget.getCode().equals(request.getCode())&&seconds<= Constants.TIME_lIVE_CODE){
+        System.out.println(seconds +"");
+        System.out.println(accountget.getCode());
+        if(!accountget.getCode().equals(request.getCode()) || seconds > Constants.TIME_lIVE_CODE){
             throw new DuplicateKeyException("code fail");
         }
         String verificationToken = UUID.randomUUID().toString();
         accountget.setToken(verificationToken);
+        accountRepo.save(accountget);
        return verificationToken;
     }
 
@@ -183,7 +187,7 @@ public class AccountCtrl {
        }
      
    }
-    @PostMapping("/register")
+        @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
     public String register(@RequestBody Createaccount createaccount, final HttpServletRequest request) throws DuplicateKeyException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NotFoundException {
            accountSevice.createAccount(createaccount);
@@ -194,7 +198,7 @@ public class AccountCtrl {
     }
     @PostMapping("forgot")
     @ResponseStatus(HttpStatus.OK)
-    public String forget(@RequestBody ForgotPasswordRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public String forgot(@RequestBody ForgotPasswordRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         Optional<Account> account=accountRepo.findByUsername(request.getUsername());
         if (!account.isPresent()) {
             throw new NotFoundException();
@@ -289,7 +293,7 @@ public class AccountCtrl {
         LocalDateTime inputTime = LocalDateTime.parse(accountget.getTimeLiveCode(), formatter);
         long seconds = ChronoUnit.SECONDS.between(inputTime, now);
 
-       if(!accountget.getCode().equals(request.getCode())&&seconds<= Constants.TIME_lIVE_CODE){
+       if(!accountget.getCode().equals(request.getCode())||seconds>= Constants.TIME_lIVE_CODE){
            throw new DuplicateKeyException("code fail");
        }
        String verificationToken = UUID.randomUUID().toString();

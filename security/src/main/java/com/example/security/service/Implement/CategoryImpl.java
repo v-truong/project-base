@@ -14,6 +14,7 @@ import com.example.security.repo.TechnicalRepo;
 import com.example.security.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -128,12 +129,35 @@ public class CategoryImpl implements CategoryService {
         Category categoryget=categoryOptional.get();
         Optional<Store> storeOptional=storeRepo.findById(categoryget.getStoreId());
         Store storegget=storeOptional.get();
+        boolean contains =storegget.getStaffIds().contains(ThreadContext.getCustomUserDetails().getId());
+        if(!contains){
+            throw new AccessDeniedException("Access");
+        }
+        List<Technical> technicals = technicalRepo.findByIdIn(request.getTechnicalId());
+        Map<String, Technical> technicalMaps = technicals.stream().collect(Collectors.toMap(Technical::getId, Function.identity()));
+        for (String technical : request.getTechnicalId()) {
+            Technical technicalFor = technicalMaps.get(technical);
+            if (technicalFor == null) {
+                throw new DuplicateKeyException(technicalFor.getId() + "does not exist");
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String element : request.getTechnicalId()) {
+            stringBuilder.append(element).append(",");
+        }
+        String listAsString = stringBuilder.toString();
+        if (listAsString.length() > 0) {
+            listAsString = listAsString.substring(0, listAsString.length() - 2);
+        }
 //        if
 //
 //        if(ThreadContext.getCustomUserDetails().getId())
+        categoryget.setTechnicalId(listAsString);
         categoryget.setName(request.getName());
-        categoryget.getParentId();
+        categoryget.setParentId(request.getParentId());
+        categoryRepo.save(categoryget);
         return null;
     }
+
 
 }

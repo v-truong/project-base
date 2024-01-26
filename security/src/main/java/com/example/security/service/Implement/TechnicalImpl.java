@@ -18,6 +18,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -63,32 +64,11 @@ public class TechnicalImpl implements TechnicalService {
             Technical technical = new Technical();
             technical.setName(request.getName());
             technical.setCategoryId(listAsString);
+            technical.setUnit(request.getUnit());
             technicalRepo.save(technical);
             return "Success";
         }
-//        Technical technical =new Technical();
-//        if (request.getCategoryId()!=null||!request.getCategoryId().isEmpty()){
-//            Optional<Category> category =categoryRepo.findById(request.getCategoryId());
-//            if (!category.isPresent()){
-//                throw new DuplicateKeyException("technical not fount");
-//            }
-//            technical.setName(request.getName());
-//            technical.setUnit(request.getUnit());
-//            technicalRepo.save(technical);
-//            Optional<Technical> technicalOptional =technicalRepo.findByName(request.getName());
-//            if(!technicalOptional.isPresent()) {
-//                throw new DuplicateKeyException("technical not fount");
-//            }
-//            Technical technicalget =technicalOptional.get();
-//            CategoryTechnical categoryTechnical =new CategoryTechnical();
-//            categoryTechnical.setTechnicalId(technicalget.getId());
-//            categoryTechnical.setCategoryId(request.getCategoryId());
-//            categoryTechnicalRepo.save(categoryTechnical);
-//        }
-//        technical.setName(request.getName());
-//        technical.setUnit(request.getUnit());
-//        technicalRepo.save(technical);
-        return "Success";
+        throw new AccessDeniedException("");
     }
 
     @Override
@@ -97,7 +77,38 @@ public class TechnicalImpl implements TechnicalService {
     }
 
     @Override
-    public String Update(UpdateTechnicalRequest technicalRequest) {
+    public String Update(UpdateTechnicalRequest request) {
+        Optional<Technical> technicalOptional =technicalRepo.findById(request.getId());
+        if(!technicalOptional.isPresent()){
+            throw new DuplicateKeyException(request+"id not fount");
+        }
+        Technical technical=technicalOptional.get();
+        Optional<Store> storeOptional=storeRepo.findById(technical.getStoreId());
+        Store storegget=storeOptional.get();
+        boolean contains =storegget.getStaffIds().contains(ThreadContext.getCustomUserDetails().getId());
+        if(!contains){
+            throw new AccessDeniedException("Access");
+        }
+        List<Category> categoryLs =categoryRepo.findByIdIn(request.getCategoryId());
+        Map<String, Category> categoryMap = categoryLs.stream().collect(Collectors.toMap(Category::getId, Function.identity()));
+        for (String category : request.getCategoryId()) {
+            Category categoryFor = categoryMap.get(category);
+            if (categoryFor == null) {
+                throw new DuplicateKeyException(categoryFor.getId() + "does not exist");
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String element : request.getCategoryId()) {
+            stringBuilder.append(element).append(",");
+        }
+        String listAsString = stringBuilder.toString();
+        if (listAsString.length() > 0) {
+            listAsString = listAsString.substring(0, listAsString.length() - 2);
+        }
+        technical.setName(request.getName());
+        technical.setCategoryId(listAsString);
+        technical.setUnit(request.getUnit());
+        technicalRepo.save(technical);
 
         return null;
     }
@@ -134,5 +145,6 @@ public class TechnicalImpl implements TechnicalService {
 
         return  speclít;
     }
+
 
 }

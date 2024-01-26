@@ -84,10 +84,6 @@ public class BrandImpl implements BrandService {
         }
         Brand brandget=brandOptional.get();
         PropertyUtils.copyProperties(brandget,request);
-
-
         return brandRepo.save(brandget);
     }
-
-
 }

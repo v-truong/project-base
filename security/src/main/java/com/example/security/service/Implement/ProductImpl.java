@@ -1,17 +1,23 @@
 package com.example.security.service.Implement;
 
+import com.example.common.config.Constants;
+import com.example.common.model.ThreadContext;
 import com.example.common.util.SearchUtil;
+import com.example.security.dto.product.CreateProductRequest;
 import com.example.security.dto.product.SearchProductRequest;
 import com.example.security.entity.Product;
 import com.example.security.repo.ProductRepo;
 import com.example.security.service.ProductService;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +46,12 @@ public class ProductImpl implements ProductService{
     }
 
     @Override
-    public Boolean createProduct() {
-        
+    public Boolean createProduct(CreateProductRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        if(!ThreadContext.getCustomUserDetails().getRole().equals(Constants.ROLE_SALESPERSON)){
+            throw new AccessDeniedException("acessDenied");
+        }
+        Product product =new Product();
+        PropertyUtils.copyProperties(product,request);
 
         throw new UnsupportedOperationException("Unimplemented method 'createProduct'");
     }
