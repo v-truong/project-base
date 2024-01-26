@@ -24,6 +24,12 @@ public interface Constants {
     public static  final String TYPE_STORE_CREATED ="created";
     public static  final String TYPE_STORE_JOINED ="joined";
     public static  final String TYPE_STORE_DELETED ="deleted";
+    public static final String ORDER_STATUS_CREATED="created";//'Đơn mới'
+    public static final String ORDER_STATUS_RECEIVED="received";//'Đã tiếp nhận'
+    public static final String ORDER_STATUS_PACKAGING="packaging";//'Đang đóng gói'
+    public static final String ORDER_STATUS_SHIPPING="shipping";//'Đang giao hàng'
+    public static final String ORDER_STATUS_DONE="done";//
+    public static final String ORDER_STATUS_CANCELED="canceled";//
 
 
 }

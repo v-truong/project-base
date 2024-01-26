@@ -1,6 +1,5 @@
 package com.example.common.response;
 
-import com.example.common.dto.response.SuccessResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -11,6 +10,7 @@ public class PageResponse<T> extends SuccessResponse {
     public PageResponse(Page<T> page) {
         this.page = page;
     }
+
 
     public int getNumber() {
         return page.getNumber();
