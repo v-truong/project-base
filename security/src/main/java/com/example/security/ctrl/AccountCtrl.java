@@ -248,8 +248,8 @@ public class AccountCtrl {
     @GetMapping("/testserver1")
     @ResponseStatus(HttpStatus.OK)
     public String getMethodName1() {
-        System.out.println("okokoko=========================");
-       return "chay dc" ;
+        System.out.println("okokoko============xzsxadas=============");
+       return "chay dcdsiakjdikajsmkajskmoas" ;
     }
     @PostMapping("/updateaccount")
     @ResponseStatus(HttpStatus.OK)

@@ -1,6 +1,9 @@
 server:
+  forward-headers-strategy: framework
   port: 9023
 spring:
+  application:
+    name: library-management
   aop:
     auto: true
   datasource:
@@ -23,6 +26,11 @@ spring:
           auth: true
           starttls:
             enable: true
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
+#springdoc:
+#  swagger-ui:
+#    enabled: true
+#    path: /swagger-ui.html
+#  api-docs.path: /api-docs

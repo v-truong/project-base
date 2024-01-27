@@ -10,7 +10,7 @@ import com.example.security.entity.Technical;
 import com.example.security.repo.BrandRepo;
 import com.example.security.service.BrandService;
 import com.sun.jdi.request.DuplicateRequestException;
-import net.bytebuddy.implementation.bytecode.Throw;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
