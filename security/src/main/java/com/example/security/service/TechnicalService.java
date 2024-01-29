@@ -17,4 +17,5 @@ public interface TechnicalService {
     List<Technical> getall();
     String Update(UpdateTechnicalRequest technicalRequest);
     Page<Technical> advanceSearch(String filter, SearchTechnicalRequest searchTechnicalRequest, Pageable pageable);
+    String delete(List<String> ids);
 }

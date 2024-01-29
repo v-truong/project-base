@@ -11,4 +11,5 @@ public interface CategoryService {
     String create(CreateCategoryRequest request);
     List<String> findTechnicallCategoryId(String categoryid);
     String update(UpdateCategoryRequest request);
+    String delete(List<String> ids);
 }

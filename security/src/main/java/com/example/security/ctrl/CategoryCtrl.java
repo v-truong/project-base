@@ -21,5 +21,10 @@ public class CategoryCtrl {
     public String create(@RequestBody CreateCategoryRequest request){
         return categoryService.create(request);
     }
+    @PostMapping("/delete")
+    public String delete(@RequestBody List<String> ids){
+        return categoryService.delete(ids);
+    }
+
 }
 

@@ -14,4 +14,5 @@ public class CreateProductRequest {
     private String description;
     private String categoryId;//người mua lấy ra theo category null
     private  String brandId;
+    private String StoreId;
 }

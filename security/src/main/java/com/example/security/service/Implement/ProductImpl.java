@@ -5,11 +5,17 @@ import com.example.common.model.ThreadContext;
 import com.example.common.util.SearchUtil;
 import com.example.security.dto.product.CreateProductRequest;
 import com.example.security.dto.product.SearchProductRequest;
+import com.example.security.dto.product.UpdateProductRequest;
+import com.example.security.entity.Category;
 import com.example.security.entity.Product;
+import com.example.security.entity.Store;
+import com.example.security.repo.CategoryRepo;
 import com.example.security.repo.ProductRepo;
+import com.example.security.repo.StoreRepo;
 import com.example.security.service.ProductService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +26,19 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductImpl implements ProductService{
     @Autowired
     private ProductRepo productRepo;
+    @Autowired
+    StoreRepo storeRepo;
+    @Autowired
+    CategoryRepo categoryRepo;
     @Override
     public List<Product> getallProduct() { 
         // List<Product> product=productRepo.findAllbyIsDelete(Constants.isDeleteTrue);
@@ -46,27 +59,45 @@ public class ProductImpl implements ProductService{
     }
 
     @Override
-    public Boolean createProduct(CreateProductRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public Product createProduct(CreateProductRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         if(!ThreadContext.getCustomUserDetails().getRole().equals(Constants.ROLE_SALESPERSON)){
             throw new AccessDeniedException("acessDenied");
         }
+        Optional<Store> store=storeRepo.findById(request.getStoreId());
+        if(!store.isPresent()){
+            throw new DuplicateKeyException("store not fount");
+        }
+        Optional<Category> category =categoryRepo.findById(request.getCategoryId());
+        if(!category.isPresent()) {
+            throw new DuplicateKeyException("Category Not fount");
+        }
+        Category categoryGet=category.get();
+
         Product product =new Product();
         PropertyUtils.copyProperties(product,request);
-
-        throw new UnsupportedOperationException("Unimplemented method 'createProduct'");
+        product.setCategoryParentId(categoryGet.getParentId());
+        return productRepo.save(product);
     }
 
     @Override
-    public Boolean deleteByIdProduct(String id) throws NotFoundException {
-        Optional<Product> product =productRepo.findById(id);
-
-        if (!product.isPresent()) {
-            throw new NotFoundException();
+    public String deleteByIdProduct(List<String> ids) throws NotFoundException {
+        if(!Constants.ROLE_SALESPERSON.equals(ThreadContext.getCustomUserDetails().getRole())){
+            throw new AccessDeniedException("ko co quyen try cap");
         }
-        Product productGet=product.get();
-        productGet.setIsDelete(1);
-        productRepo.save(productGet);
-       return true;
+        List<Product> productList=new ArrayList<>();
+        List<Product> product =productRepo.findByIdIn(ids);
+        Map<String, Product> categoryMaps = product.stream().collect(Collectors.toMap(Product::getId, Function.identity()));
+
+        for (String brand: ids) {
+            Product productFor=categoryMaps.get(brand);
+            if(productFor==null){
+                throw new DuplicateKeyException(brand+":  khong ton tai");
+            }
+            productFor.setIsDelete(Constants.ISDELETE_FALSE);
+            productList.add(productFor);
+        }
+        productRepo.saveAll(productList);
+        return "Success";
     }
 
     @Override
@@ -87,6 +118,19 @@ public class ProductImpl implements ProductService{
         }
         return productRepo.findAll(pageable);
     }
+
+    @Override
+    public Product update(String id, UpdateProductRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        Optional<Product> product =productRepo.findById(id);
+        if(!product.isPresent()){
+            throw new NotFoundException();
+        }
+        Product productGet=product.get();
+        PropertyUtils.copyProperties(productGet,request);
+        productRepo.save(productGet);
+        return null;
+    }
+
     private List<Specification<Product>> getAdvanceSearchSpecList(SearchProductRequest s){
         List<Specification<Product>> speclít=new ArrayList<>();
         if(s.getName()!=null && !s.getName().isEmpty()){
@@ -98,6 +142,10 @@ public class ProductImpl implements ProductService{
         if (s.getCategoryId()!=null && !s.getBrandId().isEmpty()){
             speclít.add(SearchUtil.eq("categoryId",s.getBrandId()));
         }
+        if (s.getCategoryParentId()!=null && !s.getCategoryParentId().isEmpty()){
+            speclít.add(SearchUtil.eq("categoryParenId",s.getCategoryParentId()));
+        }
+
 
         return  speclít;
     }

@@ -9,12 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchProductRequest {
+public class UpdateProductRequest {
     private String name;
-    private String categoryId;
-    private String brandId;
-    private String  categoryParentId;
-
-
-    
+    private String description;
+    private String categoryId;//người mua lấy ra theo category null
+    private  String brandId;
 }

@@ -1,16 +1,20 @@
 package com.example.security.ctrl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.example.common.config.enums.SortOrderEnum;
 import com.example.common.response.PageResponse;
 import com.example.common.util.SearchUtil;
+import com.example.security.dto.product.CreateProductRequest;
 import com.example.security.dto.product.SearchProductRequest;
+import com.example.security.dto.product.UpdateProductRequest;
 import com.example.security.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -40,5 +44,18 @@ public class ProductCtrl {
 //        pageData.getContent().get(1).setName("trughsrkjgkjfdghng");
         System.out.println(pageData.getContent().get(1));
         return new PageResponse<>(pageData);
+    }
+    @PostMapping(value = "/create")
+    public Product create(@RequestBody CreateProductRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        return productService.createProduct(request);
+
+    }
+    @PostMapping(value = "/update")
+    public Product update(@PathVariable String id, @RequestBody UpdateProductRequest request) throws ChangeSetPersister.NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        return productService.update(id,request);
+    }
+    @PostMapping(value = "/delete")
+    public String delete(@RequestBody List<String> ids) throws ChangeSetPersister.NotFoundException {
+        return productService.deleteByIdProduct(ids);
     }
 }

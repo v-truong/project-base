@@ -9,10 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class createProductItemRequetse {
+public class CreateProductItemRequest {
     private String Name;
     private String price;
     private String productId;
     private String technicalId;
     private String quantity;
+    private String storeId;
 }

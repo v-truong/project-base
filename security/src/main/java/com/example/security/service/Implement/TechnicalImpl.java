@@ -131,6 +131,29 @@ public class TechnicalImpl implements TechnicalService {
         }
         return technicalRepo.findAll(pageable);
     }
+
+    @Override
+    public String delete(List<String> ids) {
+        if(!Constants.ROLE_SALESPERSON.equals(ThreadContext.getCustomUserDetails().getRole())){
+            throw new AccessDeniedException("ko co quyen try cap");
+        }
+        List<Technical> technicalList=new ArrayList<>();
+        List<Technical> technicals=technicalRepo.findAllById(ids);
+        Map<String, Technical> technicalMaps = technicals.stream().collect(Collectors.toMap(Technical::getId, Function.identity()));
+        for (String brand: ids) {
+            Technical technicalFor=technicalMaps.get(brand);
+            if(technicalFor==null){
+                throw new DuplicateKeyException(brand+":  khong ton tai");
+            }
+            technicalFor.setIsDelete(Constants.ISDELETE_FALSE);
+            technicalList.add(technicalFor);
+        }
+        technicalRepo.saveAll(technicalList);
+
+
+        return null;
+    }
+
     private List<Specification<Technical>> getAdvanceSearchSpecList(SearchTechnicalRequest s){
         List<Specification<Technical>> speclít=new ArrayList<>();
         if(s.getName()!=null && !s.getName().isEmpty()){

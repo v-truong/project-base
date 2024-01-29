@@ -4,6 +4,7 @@ import com.example.common.config.Constants;
 import com.example.common.model.ThreadContext;
 import com.example.security.dto.category.CreateCategoryRequest;
 import com.example.security.dto.category.UpdateCategoryRequest;
+import com.example.security.entity.Brand;
 import com.example.security.entity.Category;
 import com.example.security.entity.Store;
 import com.example.security.entity.Technical;
@@ -156,7 +157,27 @@ public class CategoryImpl implements CategoryService {
         categoryget.setName(request.getName());
         categoryget.setParentId(request.getParentId());
         categoryRepo.save(categoryget);
-        return null;
+        return "Success";
+    }
+
+    @Override
+    public String delete(List<String> ids) {
+        if(!Constants.ROLE_SALESPERSON.equals(ThreadContext.getCustomUserDetails().getRole())){
+            throw new AccessDeniedException("ko co quyen try cap");
+        }
+        List<Category> categoryList=new ArrayList<>();
+        List<Category> categories=categoryRepo.findAllById(ids);
+        Map<String, Category> categoryMaps = categories.stream().collect(Collectors.toMap(Category::getId, Function.identity()));
+        for (String brand: ids) {
+            Category categoryFor=categoryMaps.get(brand);
+            if(categoryFor==null){
+                throw new DuplicateKeyException(brand+":  khong ton tai");
+            }
+            categoryFor.setIsDelete(Constants.ISDELETE_FALSE);
+            categoryList.add(categoryFor);
+        }
+        categoryRepo.saveAll(categoryList);
+        return "Success";
     }
 
 
