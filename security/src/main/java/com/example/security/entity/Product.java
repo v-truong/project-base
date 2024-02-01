@@ -34,6 +34,10 @@ public class Product extends BaseStoreEntity {
     private  String brandId;
     @Column(name="category_parent_id")
     private String  categoryParentId;
+    @Column(name="total_views")
+    private Integer totalViews;
+
+
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
@@ -42,6 +46,7 @@ public class Product extends BaseStoreEntity {
         setCreatedDate(formattedNow);
         setModifiedDate(formattedNow);
         setCreatedUser(ThreadContext.getCustomUserDetails().getUsername());
+        setTotalViews(0);
     }
     @PreUpdate
     protected void onUpdate() {

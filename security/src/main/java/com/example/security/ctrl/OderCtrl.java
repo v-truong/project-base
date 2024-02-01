@@ -1,12 +1,13 @@
 package com.example.security.ctrl;
 
+import com.example.security.dto.oder.CreateOderRequest;
 import com.example.security.entity.Order;
 import com.example.security.service.OrderService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @RestController
@@ -17,5 +18,14 @@ public class OderCtrl {
     public List<Order> getByAccountId(){
         return orderService.getByAccountId();
     }
+    @PostMapping("/create")
+    public String create(@RequestBody CreateOderRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        return orderService.create(request);
+    }
+    @PostMapping("/approve")
+    public String approve(@RequestBody String id) throws NotFoundException {
+        return  orderService.approve(id);
+    }
+//    @PostMapping("/")
 
 }

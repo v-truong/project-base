@@ -24,6 +24,8 @@ public class OrderHistory extends BaseStoreEntity {
     private String accountId;
     @Column(name="product_id")
     private String productId;
+    @Column(name="oder_id")
+    private String oderId;
 
     @PrePersist
     protected void onCreate() {

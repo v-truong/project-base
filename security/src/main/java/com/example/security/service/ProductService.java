@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
     List<Product> getallProduct();
-    Product getProductById(String id) throws NotFoundException;
+    Product getById(String id) throws NotFoundException;
     Product createProduct(CreateProductRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException;
     String deleteByIdProduct(List<String> ids) throws NotFoundException;
     Page<Product> advanceSearch(String filter, SearchProductRequest searchProductRequest, Pageable pageable);

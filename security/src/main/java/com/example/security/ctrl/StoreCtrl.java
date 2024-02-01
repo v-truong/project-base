@@ -27,8 +27,6 @@ public class StoreCtrl {
         return storeService.filter(request);
 
     }
-
-
     @PostMapping("/getAllByStaffId")
     public List<Store> getAllByStaffId(){
         return storeService.getAllByStaffId();

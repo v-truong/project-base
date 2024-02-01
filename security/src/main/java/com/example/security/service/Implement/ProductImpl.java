@@ -46,7 +46,7 @@ public class ProductImpl implements ProductService{
     }
 
     @Override
-    public Product getProductById(String id) throws NotFoundException {
+    public Product getById(String id) throws NotFoundException {
         Optional<Product> product =productRepo.findById(id);
         if (!product.isPresent()) {
             throw new NotFoundException();
@@ -54,7 +54,12 @@ public class ProductImpl implements ProductService{
         if (product.get().getIsDelete()!=1) {
             throw new NotFoundException();
         }
+
         Product productGet=product.get();
+        if(ThreadContext.getCustomUserDetails().getRole().equals(Constants.ROLE_BUYER)){
+            productGet.setTotalViews(productGet.getTotalViews()+1);
+            productRepo.save(productGet);
+        }
         return productGet;
     }
 
@@ -121,6 +126,10 @@ public class ProductImpl implements ProductService{
 
     @Override
     public Product update(String id, UpdateProductRequest request) throws NotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        if(ThreadContext.getCustomUserDetails().getRole().equals(Constants.ROLE_SALESPERSON)){
+            throw new AccessDeniedException("");
+        }
+
         Optional<Product> product =productRepo.findById(id);
         if(!product.isPresent()){
             throw new NotFoundException();

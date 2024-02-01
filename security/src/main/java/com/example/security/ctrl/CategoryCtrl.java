@@ -13,7 +13,7 @@ import java.util.List;
 @CrossOrigin
 public class CategoryCtrl {
     @Autowired private CategoryService categoryService;
-    @GetMapping
+    @GetMapping("/getAll")
     public List<Category> getall(){
        return categoryService.getall();
     }

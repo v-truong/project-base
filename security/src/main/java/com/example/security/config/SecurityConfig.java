@@ -50,7 +50,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/users/**","/api/v1/users/login","/swagger-ui.html","/swagger-ui/**","/swagger-resources/**","/v3/api-docs/**","/v3/api-docs.yaml","/api/v1/auth/**").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/v1/product/**","/api/v1/province/**","/api/v1/ward","/api/v1/district","/api/v1/customer/**","/api/v1/customeraddress/**","/api/v1/brand/**","/api/v1/category/**","/api/v1/store/**","/api/v1/technical/**")
+                .authorizeHttpRequests().requestMatchers("/api/v1/product/**",
+                        "/api/v1/province/**",
+                        "/api/v1/ward",
+                        "/api/v1/district",
+                        "/api/v1/customer/**",
+                        "/api/v1/customeraddress/**",
+                        "/api/v1/brand/**",
+                        "/api/v1/category/**",
+                        "/api/v1/store/**",
+                        "/api/v1/technical/**")
                 .authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -58,4 +58,8 @@ public class ProductCtrl {
     public String delete(@RequestBody List<String> ids) throws ChangeSetPersister.NotFoundException {
         return productService.deleteByIdProduct(ids);
     }
+    @PostMapping("/getById")
+    public Product getById(@RequestBody String id) throws ChangeSetPersister.NotFoundException {
+        return productService.getById(id);
+    }
 }
