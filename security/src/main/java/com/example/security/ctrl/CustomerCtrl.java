@@ -30,7 +30,7 @@ public class CustomerCtrl {
     CustomerService customerService;
 
     @PostMapping("/detail")
-    public Customer getDetail(@RequestBody Customer request){
+    public Customer getDetail(@RequestBody Customer request) throws NotFoundException {
         return customerService.getById(request.getId());
     }
     @PostMapping("/filter")

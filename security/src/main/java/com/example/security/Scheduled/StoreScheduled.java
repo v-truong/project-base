@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class StoreScheduled {
     @Autowired private StoreRepo storeRepo;
-    @Scheduled(fixedRate = 1000) // Thực hiện công việc mỗi 5 giây
+    @Scheduled///(fixedRate = 1000) // Thực hiện công việc mỗi 5 giây
     public void updateStatusExpire() {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");

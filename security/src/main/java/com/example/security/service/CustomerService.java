@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface CustomerService {
     Page<Customer> getList(String filter, SearchCustomerRequest searchCustomerRequest, Pageable pageable, int isDelete);//role sale person
-    Customer getById(String customerId);// customer infor
+    Customer getById(String customerId) throws ChangeSetPersister.NotFoundException;// customer infor
     String create(CreateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ChangeSetPersister.NotFoundException;
     String edit(UpdateCustomerRequest request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ChangeSetPersister.NotFoundException;
     String delete(List<String> Ids);//role sale person

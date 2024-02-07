@@ -68,8 +68,11 @@ public class CustomerImpl implements CustomerService {
     }
 
     @Override
-    public Customer getById(String customerId) {
+    public Customer getById(String customerId) throws NotFoundException {
         Optional<Customer> customer = customerRepo.findById(customerId);
+        if(!customer.isPresent()){
+            throw new NotFoundException();
+        }
         Customer customerGet = customer.get();
         return customerGet;
     }
