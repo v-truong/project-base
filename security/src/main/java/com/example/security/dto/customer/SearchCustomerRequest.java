@@ -10,9 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchCustomerRequest {
-    String customerId;
     String fullname;
     String username;
     String email;
     String phone;
+    String storeId;
 }

@@ -63,7 +63,9 @@ public class CustomerImpl implements CustomerService {
         if (s.getPhone()!=null && !s.getPhone().isEmpty()){
             speclist.add(SearchUtil.eq("phone",s.getPhone()));
         }
-
+        if(s.getStoreId()!=null && s.getStoreId().isEmpty()){
+            speclist.add(SearchUtil.eq("storeId",s.getStoreId()));
+        }
         return  speclist;
     }
 

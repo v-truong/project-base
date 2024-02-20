@@ -25,6 +25,7 @@ import com.example.security.filter.JwtAuthFilter;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
     @Autowired
     private JwtAuthFilter authFilter;
 
@@ -48,7 +49,14 @@ public class SecurityConfig {
         http.cors().and().csrf().disable();
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/users/**","/api/v1/users/login","/swagger-ui.html","/swagger-ui/**","/swagger-resources/**","/v3/api-docs/**","/v3/api-docs.yaml","/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/v1/users/**",
+                        "/api/v1/users/login",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/swagger-resources/**",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs.yaml",
+                        "/api/v1/auth/**").permitAll()
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/v1/product/**",
                         "/api/v1/province/**",
