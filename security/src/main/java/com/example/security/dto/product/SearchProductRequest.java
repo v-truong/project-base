@@ -13,6 +13,7 @@ public class SearchProductRequest {
     private String name;
     private String categoryId;
     private String brandId;
+    private String image;
     private String  categoryParentId;
 
 

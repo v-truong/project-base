@@ -12,6 +12,7 @@ import lombok.Setter;
 public class UpdateProductRequest {
     private String name;
     private String description;
+    private String image;
     private String categoryId;//người mua lấy ra theo category null
     private  String brandId;
 }

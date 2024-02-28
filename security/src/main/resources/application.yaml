@@ -8,8 +8,11 @@ spring:
     auto: true
   datasource:
     url: jdbc:mysql://yashgemjewelleries.cbj4aikacpbj.ap-southeast-2.rds.amazonaws.com:3306/ShopManagement
+#    url: jdbc:mysql://localhost:3306/do-an4
     username: hoainam
     password: hoainam1212
+#    username: root
+#    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:

@@ -34,6 +34,7 @@ public class Product extends BaseStoreEntity {
     private  String brandId;
     @Column(name="category_parent_id")
     private String  categoryParentId;
+    private String image;
     @Column(name="total_views")
     private Integer totalViews;
 
