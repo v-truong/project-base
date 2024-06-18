@@ -117,4 +117,18 @@ public class SearchUtil {
       }
     };
   }
+     public static Specification<User> usernameIn(List<String> usernames) {
+    return (root, query, criteriaBuilder) -> {
+        if (usernames != null && !usernames.isEmpty()) {
+            List<Predicate> predicates = new ArrayList<>();
+            for (String username : usernames) {
+                predicates.add(criteriaBuilder.like(root.get("username"), "%" + username + "%"));
+            }
+            return criteriaBuilder.or(predicates.toArray(new Predicate[0]));
+        }
+        return criteriaBuilder.conjunction();
+    };
+}
+
+List<User> usersWithUsernameInList = userRepository.findAll(usernameIn(Arrays.asList("john", "jane", "bob")));
 }
